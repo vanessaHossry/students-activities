@@ -1,0 +1,5 @@
+[
+    {"name":"Tutor","portal_slug" : "user"},
+    {"name":"User", "portal_slug" : "user"},
+    {"name":"Super Admin", "portal_slug" :"admin"}
+]
