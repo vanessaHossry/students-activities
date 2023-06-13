@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\V1\AuthController;
+use App\Http\Controllers\Admin\V1\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,8 +20,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
+// --- Authentication
 Route::post('/login',                           [AuthController::class, 'login']);
-Route::post('/signup',                          [AuthController::class, 'store']);         
 Route::get('/logout',                           [AuthController::class, 'logout']);
-Route::get('/me',                               [AuthController::class, 'me']);
+
+// --- User
+Route::post('/signup',                          [UserController::class, 'store']);         
+Route::get('/getSelf',                          [UserController::class, 'getSelf']);
+

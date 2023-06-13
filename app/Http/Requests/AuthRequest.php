@@ -27,7 +27,7 @@ class AuthRequest extends FormRequest
         $route_action = Route::current()->getActionName();
         return match($route_action){
                 AuthController::class  .  "@login"          => $this->login(),
-                AuthController::class  .  "@store"          => $this->store(),  
+            
         };
     }
 
@@ -38,14 +38,5 @@ class AuthRequest extends FormRequest
         ];
     }
 
-    public function store(){
-        return [
-            'first_name'     => 'required|string',
-            'last_name'      => 'required|string',
-            'email'          => 'required|email|unique:users,email',
-            'password'       => ['required','string', Password::min(6)],  
-            'date_of_birth'  => 'date',
-            'gender'         => 'string|nullable',
-             ];
-    }
+   
 }

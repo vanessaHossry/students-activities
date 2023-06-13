@@ -19,49 +19,6 @@
         }
     ],
     "paths": {
-        "/me": {
-            "get": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Get self User",
-                "operationId": "7cc5616235ba545ea9c0945e842b76a4",
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "description": "status",
-                                            "type": "boolean"
-                                        },
-                                        "data": {
-                                            "description": "data",
-                                            "type": "object"
-                                        },
-                                        "message": {
-                                            "description": "message",
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerToken": []
-                    }
-                ]
-            }
-        },
         "/login": {
             "post": {
                 "tags": [
@@ -85,128 +42,6 @@
                                     },
                                     "password": {
                                         "description": "password"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful Operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "description": "status",
-                                            "type": "boolean"
-                                        },
-                                        "data": {
-                                            "description": "data",
-                                            "type": "object"
-                                        },
-                                        "message": {
-                                            "description": "message",
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocessable Entity",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "description": "status",
-                                            "type": "boolean"
-                                        },
-                                        "data": {
-                                            "description": "data",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object"
-                                            }
-                                        },
-                                        "message": {
-                                            "description": "message",
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "description": "status",
-                                            "type": "boolean"
-                                        },
-                                        "data": {
-                                            "description": "data",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object"
-                                            }
-                                        },
-                                        "message": {
-                                            "description": "message",
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/signup": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "user signup",
-                "operationId": "userSignUp",
-                "requestBody": {
-                    "description": "Body request needed to add user object",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "first_name": {
-                                        "description": "first name"
-                                    },
-                                    "last_name": {
-                                        "description": "last name"
-                                    },
-                                    "email": {
-                                        "description": "email"
-                                    },
-                                    "password": {
-                                        "description": "password"
-                                    },
-                                    "date_of_birth": {
-                                        "description": "date of birth",
-                                        "type": "string",
-                                        "format": "date"
-                                    },
-                                    "gender": {
-                                        "description": "gender"
                                     }
                                 },
                                 "type": "object"
@@ -338,13 +173,165 @@
                     }
                 ]
             }
-        }
-    },
-    "components": {
-        "securitySchemes": {
-            "bearerToken": {
-                "type": "http",
-                "scheme": "bearer"
+        },
+        "/getSelf": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get self User",
+                "operationId": "17ccc2df6624af6d44e02d39db7481e0",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/signup": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "user signup",
+                "operationId": "userSignUp",
+                "requestBody": {
+                    "description": "Body request needed to add user object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "first_name": {
+                                        "description": "first name"
+                                    },
+                                    "last_name": {
+                                        "description": "last name"
+                                    },
+                                    "email": {
+                                        "description": "email"
+                                    },
+                                    "password": {
+                                        "description": "password"
+                                    },
+                                    "date_of_birth": {
+                                        "description": "date of birth",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "gender": {
+                                        "description": "gender"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
