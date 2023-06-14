@@ -1,0 +1,335 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Laravel OpenApi Demo Documentation for admin",
+        "description": "L5 Swagger OpenApi description for admin",
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000/api",
+            "description": "Demo API Server"
+        }
+    ],
+    "paths": {
+        "/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "authorize user",
+                "operationId": "userSignUi",
+                "requestBody": {
+                    "description": "Body request needed to add user object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "email"
+                                    },
+                                    "password": {
+                                        "description": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "log out user",
+                "operationId": "1d9181ac7908383a161d601a0454f799",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerToken": []
+                    }
+                ]
+            }
+        },
+        "/getSelf": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get self User",
+                "operationId": "17ccc2df6624af6d44e02d39db7481e0",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/signup": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "user signup",
+                "operationId": "userSignUp",
+                "requestBody": {
+                    "description": "Body request needed to add user object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "first_name": {
+                                        "description": "first name"
+                                    },
+                                    "last_name": {
+                                        "description": "last name"
+                                    },
+                                    "email": {
+                                        "description": "email"
+                                    },
+                                    "password": {
+                                        "description": "password"
+                                    },
+                                    "date_of_birth": {
+                                        "description": "date of birth",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "gender": {
+                                        "description": "gender"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

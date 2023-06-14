@@ -30,8 +30,7 @@ class AuthController extends Controller
 
 
 // == GET
-
-
+//
 
 // == EDIT
 
@@ -96,7 +95,9 @@ class AuthController extends Controller
             if (!isset($token))
                 return $this->errorResponse('unauthorized', Response::HTTP_UNAUTHORIZED);
 
-            return $this->successResponse($token)->withCookie(cookie('token', $token, time() + 3600));
+                 //return $this->successResponse($token)->withCookie(cookie('token', $token, time() + 3600));
+                return $this->successResponse($token)->withCookie(cookie('token', $token, (Auth::factory()->getTTL()) , null, null, true, true, false, 'none'));
+           
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -107,37 +108,31 @@ class AuthController extends Controller
 
     // --- logout 
     /**
-     
-
-        * @OA\Get(
-        *     path="/logout",
-        *     summary="log out user",
-        *     tags={"Auth"},
-        *     security={{ "bearerToken": {} }},
-        *     @OA\Response(
-        *         response=200,
-        *         description="Successful operation",
-        *         @OA\JsonContent(
-            *          type="object",
-            *          @OA\Property(property="success", type="boolean", description="status" ),
-            *          @OA\Property(property="data", type="object", description="data" ),
-            *          @OA\Property(property="message", type="string", description="message" ),
-            *          ),
-       
-        * 
-        *     ),
-        *     @OA\Response(
-        *         response=401,
-        *         description="Unauthorized"
-        *     )
-        * )
-        
-        */
-
+     * @OA\Get(
+     *     path="/logout",
+     *     summary="log out user",
+     *     tags={"Auth"},
+     *     security={{ "bearerToken": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property(property="success", type="boolean", description="status" ),
+     *          @OA\Property(property="data", type="object", description="data" ),
+     *          @OA\Property(property="message", type="string", description="message" ),
+     *          ),
+     * 
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function logout()
     {
         try {
-
             $user = auth()->user();
             $userName = $user->first_name;
             $cookie = Cookie::forget('token');

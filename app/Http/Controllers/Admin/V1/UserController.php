@@ -10,15 +10,16 @@ use Illuminate\Http\Response;
 use App\Interfaces\UserInterface;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\V1\Docs;
 
 
 class UserController extends Controller
 {
-    use ApiResponse;
+    use ApiResponse, Docs;
     private $userRepository;
     public function __construct(UserInterface $userRepository)
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api');
         
         $this->userRepository = $userRepository;
     }
@@ -27,6 +28,7 @@ class UserController extends Controller
 
  
    /**
+    
  * @OA\Get(
  *     path="/getSelf",
  *     summary="Get self User",
@@ -120,11 +122,9 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         try {
-
             $user = $this->userRepository->store($request);
-            
+
             return $this->successResponse($user);
-            
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }

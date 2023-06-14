@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Admin\V1;
+namespace App\Http\Controllers\Client\V1;
 
 /**
      * @OA\Info(
      *      version="1.0.0",
-     *      title="Laravel OpenApi Demo Documentation for admin",
-     *      description="L5 Swagger OpenApi description for admin",
+     *      title="Laravel OpenApi Demo Documentation for user",
+     *      description="L5 Swagger OpenApi description for user",
      * 
      *      @OA\License(
      *          name="Apache 2.0",
