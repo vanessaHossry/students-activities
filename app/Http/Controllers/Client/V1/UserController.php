@@ -1,17 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Admin\V1;
+namespace App\Http\Controllers\Client\V1;
 
 use Exception;
-
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Interfaces\UserInterface;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Admin\V1\Docs;
-
 
 class UserController extends Controller
 {
@@ -19,59 +16,60 @@ class UserController extends Controller
     private $userRepository;
     public function __construct(UserInterface $userRepository)
     {
-        $this->middleware('auth:api');
+        $this->middleware('auth.apikey');
         
         $this->userRepository = $userRepository;
     }
 
-    // == GET
+      // == GET
 
  
    /**
     
- * @OA\Get(
- *     path="/getSelf",
- *     summary="Get self User",
- *     tags={"User"},
- *     @OA\Response(
- *         response=200,
- *         description="Successful operation",
- *         @OA\JsonContent(
-     *          type="object",
-     *          @OA\Property(property="success", type="boolean", description="status" ),
-     *          @OA\Property(property="data", type="object", description="data" ),
-     *          @OA\Property(property="message", type="string", description="message" ),
-     *          ),
+* @OA\Get(
+*     path="/client/v1/getSelf",
+*     summary="Get self User",
+*     tags={"User"},
+* security={{ "APIKey": {} }},
+* 
+*     @OA\Response(
+*         response=200,
+*         description="Successful operation",
+*         @OA\JsonContent(
+*          type="object",
+*          @OA\Property(property="success", type="boolean", description="status" ),
+*          @OA\Property(property="data", type="object", description="data" ),
+*          @OA\Property(property="message", type="string", description="message" ),
+*          ),
+* 
+*     ),
+*     @OA\Response(
+*         response=401,
+*         description="Unauthorized"
+*     )
+* )
+*/
+public function getSelf()
+{
+    try {
+        $user = $this->userRepository->getSelf();
 
- * 
- *     ),
- *     @OA\Response(
- *         response=401,
- *         description="Unauthorized"
- *     )
- * )
- */
-    public function getSelf()
-    {
-        try {
-            $user = $this->userRepository->getSelf();
-
-            return $this->successResponse($user);
-        } catch (Exception $e) {
-            return $this->errorResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return $this->successResponse($user);
+    } catch (Exception $e) {
+        return $this->errorResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
     }
-   
+}
 
-     // --- sign up
+  // --- sign up
 
     /**
      
      * @OA\Post(
-     * path="/signup",
+     * path="/client/v1/store",
      * operationId="userSignUp",
      * tags={"User"},
      * summary="user signup",
+     * security={{ "APIKey": {} }},
      *     @OA\RequestBody(
      *           required=true,
      *           description="Body request needed to add user object",
@@ -118,15 +116,17 @@ class UserController extends Controller
      *          ),
      *       ),
      * )
-     */
-    public function store(UserRequest $request)
-    {
-        try {
-            $user = $this->userRepository->store($request);
-
-            return $this->successResponse($user);
-        } catch (Exception $e) {
-            return $this->errorResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+     *
+      */
+public function store(UserRequest $request){
+    try {
+        $user = $this->userRepository->store($request);
+        return $this->successResponse($user);
     }
+    catch(Exception $e){
+        return $this->errorResponse($e->getMessage(),Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+}
+
+
 }

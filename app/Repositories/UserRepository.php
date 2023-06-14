@@ -24,7 +24,7 @@ class UserRepository implements UserInterface
             "gender" => $request->gender,
 
         ]);
-        $role_id = Role::where("slug","super-admin")->value('id');
+        $role_id = Role::where("slug","tutor")->value('id');
         $user->assignRole($role_id);
 
         return $user;

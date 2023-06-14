@@ -17,9 +17,15 @@ namespace App\Http\Controllers\Admin\V1;
      * @OA\Server(
      *      url=L5_SWAGGER_CONST_HOST,
      *      description="Demo API Server"
+     * ),
+     * 
+     * @OA\SecurityScheme(
+     *      securityScheme="APIKey",
+     *      type="apiKey",
+     *      in="header",
+     *      name="X-Authorization"
      * )
- * )
-
+     *
 */
 
 trait Docs{}

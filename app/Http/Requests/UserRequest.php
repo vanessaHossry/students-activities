@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Http\Controllers\Admin\V1\UserController;
+use App\Http\Controllers\Client\V1\UserController;
 
 class UserRequest extends FormRequest
 {

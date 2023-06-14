@@ -2,8 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\V1\AuthController;
-use App\Http\Controllers\Admin\V1\UserController;
+use Illuminate\Routing\Controllers\Middleware;
+use App\Http\Controllers\Admin\V1\AdminController;
+use App\Http\Controllers\Client\V1\UserController;
+use App\Http\Controllers\Admin\V1\AdminAuthController;
+use App\Http\Controllers\Client\V1\UserAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,15 +19,36 @@ use App\Http\Controllers\Admin\V1\UserController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
-// --- Authentication
-Route::post('/login',                           [AuthController::class, 'login']);
-Route::get('/logout',                           [AuthController::class, 'logout']);
+Route::group(
+    [
+        'middleware' => ['api', 'auth.apikey'],
+        'prefix' => 'admin/v1'
+    ],
+    function () {
+        // --- Admin Authentication
+        Route::post('/login',                       [AdminAuthController::class, 'login']);
+        Route::get('/logout',                       [AdminAuthController::class, 'logout']);
 
-// --- User
-Route::post('/signup',                          [UserController::class, 'store']);         
-Route::get('/getSelf',                          [UserController::class, 'getSelf']);
+        // --- Admin
+        Route::get('/getSelf',                      [AdminController::class, 'getSelf']);
 
+    }
+);
+
+Route::group(
+    [
+        'middleware' => ['api', 'auth.apikey'],
+        'prefix' => 'client/v1'
+    ],
+    function () {
+       // --- User Authentication 
+       Route::post('/login',                       [UserAuthController::class, 'login']);
+       Route::get('/logout',                       [UserAuthController::class , 'logout']);
+
+       // --- User
+       Route::get('/getSelf',                      [UserController::class, 'getSelf']);
+       Route::post('/store',                       [UserController::class , 'store']);
+      
+    }
+);

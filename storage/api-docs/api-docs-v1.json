@@ -1,8 +1,8 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Laravel OpenApi Demo Documentation for admin",
-        "description": "L5 Swagger OpenApi description for admin",
+        "title": "Laravel OpenApi Demo Documentation for user",
+        "description": "L5 Swagger OpenApi description for user",
         "license": {
             "name": "Apache 2.0",
             "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
@@ -16,13 +16,13 @@
         }
     ],
     "paths": {
-        "/admin/v1/login": {
+        "/client/v1/login": {
             "post": {
                 "tags": [
-                    "Auth"
+                    "User Auth"
                 ],
                 "summary": "authenticate user",
-                "operationId": "3935ccfff65b59c5756fcab21617a0cc",
+                "operationId": "8fc85780020dc40e244ec64814647df6",
                 "requestBody": {
                     "description": "Body request needed to add user object",
                     "required": true,
@@ -133,13 +133,13 @@
                 ]
             }
         },
-        "/admin/v1/logout": {
+        "/client/v1/logout": {
             "get": {
                 "tags": [
-                    "Auth"
+                    "User Auth"
                 ],
                 "summary": "log out user",
-                "operationId": "b3dd03c68f11dbcc335a418e6c18d986",
+                "operationId": "b5b9c2a53ff54691a394bddd4ba8c1c7",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -176,13 +176,13 @@
                 ]
             }
         },
-        "/admin/v1/getSelf": {
+        "/client/v1/getSelf": {
             "get": {
                 "tags": [
                     "User"
                 ],
                 "summary": "Get self User",
-                "operationId": "757c78887c4cf632800a2949aa8708b1",
+                "operationId": "1f2dba231a92200a61b3656adc251197",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -210,6 +210,133 @@
                     },
                     "401": {
                         "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "APIKey": []
+                    }
+                ]
+            }
+        },
+        "/client/v1/store": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "user signup",
+                "operationId": "userSignUp",
+                "requestBody": {
+                    "description": "Body request needed to add user object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "first_name": {
+                                        "description": "first name"
+                                    },
+                                    "last_name": {
+                                        "description": "last name"
+                                    },
+                                    "email": {
+                                        "description": "email"
+                                    },
+                                    "password": {
+                                        "description": "password"
+                                    },
+                                    "date_of_birth": {
+                                        "description": "date of birth",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "gender": {
+                                        "description": "gender"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
