@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers\Client\V1;
 
+use App\Interfaces\UserInterface;
 use Exception;
+use App\Models\User;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Requests\AuthRequest;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use App\Http\Requests\Client\V1\AuthRequest             as V1ClientAuthRequest;
 
-class UserAuthController extends Controller
+class AuthController extends Controller
 {
     use ApiResponse, Docs;
-
-    public function __Construct(){
-        $this->middleware('auth:api',['except'=>['login']]);
+    private $userRepository;
+    public function __Construct(UserInterface $userRepository){
+            $this->middleware('auth:api',['except'=>['login']]);
+            $this->userRepository = $userRepository;
     }
     
 
@@ -72,19 +76,26 @@ class UserAuthController extends Controller
      *       ),
      * )
      */
-    public function login(AuthRequest $request){
+    public function login(V1ClientAuthRequest $request){
        try{
-        $credentials = request(['email', 'password']);
-        $token = auth()->attempt($credentials);
-        if(!isset($token))
-            return $this->errorResponse('unauthenticated' , Response::HTTP_UNAUTHORIZED);
         
+            $credentials = request(['email', 'password']);
+            $token = auth()->attempt($credentials); 
+            if(!$token)
+            return  $this->errorResponse(__("messages.unauthorized"),Response::HTTP_UNAUTHORIZED);
+        
+             // -- get role by email
+            $role = $this->userRepository->getRoleByEmail($request->email);
+            if($role!= "Tutor" && $role!= "User")
+            return  $this->errorResponse(__("messages.unauthorized"),Response::HTTP_UNAUTHORIZED);
+         
+         
             return $this->successResponse($token)->withCookie(cookie('token',$token,(Auth::factory()->getTTL()) , null, null, true, true, false, 'none'));
 
-       } 
-       catch(Exception $e){
+            } 
+            catch(Exception $e){ 
             return $this->errorResponse($e->getMessage(),Response::HTTP_INTERNAL_SERVER_ERROR);
-       }
+            }
     }
 
      // --- logout 

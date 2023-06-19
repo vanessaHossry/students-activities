@@ -13,7 +13,7 @@ class Activity extends Model
 {
     use HasFactory,SoftDeletes,HasSlug, HasUuids;
     protected $table='activities';
-    protected $dates ='deleted_at';
+    protected $dates = ['deleted_at'];
 
     protected $fillable=[
         'slug',
@@ -28,8 +28,9 @@ class Activity extends Model
         'deleted_at',
     ];
 
-    public function weekdays(){
-        $this->belongsToMany(WeekDay::class, "activities_week");
+    public function weekdays()
+    {
+        $this->belongsToMany(WeekDay::class, "activities_week")->withPivot('start_date', 'end_date');
     }
 
     public function getSlugOptions():SlugOptions

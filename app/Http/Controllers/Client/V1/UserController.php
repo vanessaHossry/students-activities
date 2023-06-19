@@ -7,7 +7,7 @@ use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Interfaces\UserInterface;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\Client\V1\UserRequest             as V1ClientUserRequest;
 use App\Http\Controllers\Controller;
 
 class UserController extends Controller
@@ -17,7 +17,7 @@ class UserController extends Controller
     public function __construct(UserInterface $userRepository)
     {
         $this->middleware('auth.apikey');
-        
+        $this->middleware('auth:api',["except" => ["signUp"]]);
         $this->userRepository = $userRepository;
     }
 
@@ -65,7 +65,7 @@ public function getSelf()
     /**
      
      * @OA\Post(
-     * path="/client/v1/store",
+     * path="/client/v1/signUp",
      * operationId="userSignUp",
      * tags={"User"},
      * summary="user signup",
@@ -82,6 +82,7 @@ public function getSelf()
      *               @OA\Property(property="password",description="password"),
      *               @OA\Property(property="date_of_birth", description="date of birth", type="date"),
      *               @OA\Property(property="gender",description="gender"),
+     *               @OA\Property(property="role_slug",description="role slug"),
      *            ),
      *        ),
      *    ),
@@ -118,7 +119,7 @@ public function getSelf()
      * )
      *
       */
-public function store(UserRequest $request){
+public function signUp(V1ClientUserRequest $request){
     try {
         $user = $this->userRepository->store($request);
         return $this->successResponse($user);

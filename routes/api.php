@@ -3,10 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Routing\Controllers\Middleware;
-use App\Http\Controllers\Admin\V1\AdminController;
-use App\Http\Controllers\Client\V1\UserController;
-use App\Http\Controllers\Admin\V1\AdminAuthController;
-use App\Http\Controllers\Client\V1\UserAuthController;
+use App\Http\Controllers\Admin\V1\UserController        as V1AdminUserController;
+use App\Http\Controllers\Client\V1\UserController       as V1ClientUserController;
+use App\Http\Controllers\Admin\V1\AuthController        as V1AdminAuthController;
+use App\Http\Controllers\Client\V1\AuthController       as V1ClientAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,12 +27,18 @@ Route::group(
     ],
     function () {
         // --- Admin Authentication
-        Route::post('/login',                       [AdminAuthController::class, 'login']);
-        Route::get('/logout',                       [AdminAuthController::class, 'logout']);
-
+        Route::post('/login',                       [V1AdminAuthController::class, 'login']);
+        Route::get('/logout',                       [V1AdminAuthController::class, 'logout']);
+        Route::post('/refresh',                     [V1AdminAuthController::class, 'refresh']);
+        
+        
         // --- Admin
-        Route::get('/getSelf',                      [AdminController::class, 'getSelf']);
-
+        Route::get('/getSelf',                      [V1AdminUserController::class, 'getSelf']);
+        Route::post('/store',                       [V1AdminUserController::class, 'store']);
+        Route::get('/index',                        [V1AdminUserController::class, 'index']);
+        Route::get('/show/{email}',                 [V1AdminUserController::class, 'show']);
+        Route::delete('/destroy/{email}',           [V1AdminUserController::class, 'destroy']);
+        Route::get('/getDeleted',                   [V1AdminUserController::class, 'getDeleted']);
     }
 );
 
@@ -43,12 +49,12 @@ Route::group(
     ],
     function () {
        // --- User Authentication 
-       Route::post('/login',                       [UserAuthController::class, 'login']);
-       Route::get('/logout',                       [UserAuthController::class , 'logout']);
+       Route::post('/login',                       [V1ClientAuthController::class, 'login']);
+       Route::get('/logout',                       [V1ClientAuthController::class , 'logout']);
 
        // --- User
-       Route::get('/getSelf',                      [UserController::class, 'getSelf']);
-       Route::post('/store',                       [UserController::class , 'store']);
+       Route::get('/getSelf',                      [V1ClientUserController::class, 'getSelf']);
+       Route::post('/signUp',                      [V1ClientUserController::class , 'signUp']);
       
     }
 );

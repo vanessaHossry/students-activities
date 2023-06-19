@@ -22,7 +22,7 @@
                     "User Auth"
                 ],
                 "summary": "authenticate user",
-                "operationId": "8fc85780020dc40e244ec64814647df6",
+                "operationId": "3569f57411ab3bba80069dd7f4f38849",
                 "requestBody": {
                     "description": "Body request needed to add user object",
                     "required": true,
@@ -139,7 +139,7 @@
                     "User Auth"
                 ],
                 "summary": "log out user",
-                "operationId": "b5b9c2a53ff54691a394bddd4ba8c1c7",
+                "operationId": "626aff41ef352318568f9d473ac08433",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -219,7 +219,7 @@
                 ]
             }
         },
-        "/client/v1/store": {
+        "/client/v1/signUp": {
             "post": {
                 "tags": [
                     "User"
@@ -252,6 +252,9 @@
                                     },
                                     "gender": {
                                         "description": "gender"
+                                    },
+                                    "role_slug": {
+                                        "description": "role slug"
                                     }
                                 },
                                 "type": "object"

@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin\V1;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Http\Controllers\Admin\V1\AdminAuthController;
-use App\Http\Controllers\Client\V1\UserAuthController;
+use App\Http\Controllers\Admin\V1\AuthController             as V1AdminAuthController;
 
 class AuthRequest extends FormRequest
 {
@@ -25,16 +24,16 @@ class AuthRequest extends FormRequest
      */
     public function rules(): array
     {
-        $route_action = Route::current()->getActionName();
-        return match($route_action){
-                AdminAuthController::class  .  "@login"          => $this->login(),
-                UserAuthController::class   .  "@login"          => $this->login(),
+        $route_action= Route::current()->getActionName();
+        return match($route_action)
+        {
+            V1AdminAuthController::class    .  "@login"          => $this->login(),
         };
-    }
 
+    }
     public function login(){
         return [
-            'email' => 'required|email',
+            'email' => 'required|email|string',
             'password' => ['required', 'string', Password::min(6)],
         ];
     }
