@@ -2,7 +2,9 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 trait ApiResponse
 {
@@ -21,5 +23,15 @@ trait ApiResponse
             "error" => $error,
             "error_code" => $code
         ], $code);
+    }
+
+    public function generateToken($table){
+        $res=true;
+        while($res){
+            $token = Str::random(64);
+            $res = DB::select("select * from $table where token = ?", [$token]);
+        }
+        return $token;
+       
     }
 }

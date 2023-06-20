@@ -55,6 +55,8 @@ Route::group(
        // --- User
        Route::get('/getSelf',                      [V1ClientUserController::class, 'getSelf']);
        Route::post('/signUp',                      [V1ClientUserController::class , 'signUp']);
+       Route::post('/requestReset',                [V1ClientUserController::class, 'requestReset']);
+       Route::post('/resetPassword',               [V1ClientUserController::Class, 'resetPassword']);
       
     }
 );

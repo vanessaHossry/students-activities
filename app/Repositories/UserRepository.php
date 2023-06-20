@@ -31,11 +31,25 @@ class UserRepository implements UserInterface
         return $user;
     }
 
-    public function index()
-    {
-        //return User::all();
-          return User::get();
-    }
+    public function index($request)
+    {   
+        $users = User::query();
+        
+        if (isset($request->name)) {
+        $users = $users->where('first_name', 'LIKE', '%' . $request->name . '%')
+        ->orWhere('last_name', 'LIKE', '%' . $request->name . '%');
+      }
+        if(isset($request->gender)){
+        $users = $users->where('gender',$request->gender);
+      }
+        if(isset($request->role)){
+        $users = $users->whereHas('roles', function ($query) use ($request) {
+            $query->where('slug', $request->role);
+        });
+        }
+
+        return $users->paginate($request->per_page);
+}
 
     public function show($request)
     {
@@ -45,14 +59,15 @@ class UserRepository implements UserInterface
     public function getDeleted(){
         // $users = User::whereNotNull('deleted_at')->withTrashed()->get();
 
-        //-- this query only returns DELETED users
-        $users = User::onlyTrashed()->get();
-
         //-- this query returns all the users (DELETED + NOT DELETED)
         $users = User::withTrahsed()->get();
 
         //-- this query returns NOT DELETED users
-        $users = User::get();        
+        $users = User::get();   
+        
+        //-- this query only returns DELETED users
+        $users = User::onlyTrashed()->get();
+
 
         return $users;
     }
@@ -64,7 +79,6 @@ class UserRepository implements UserInterface
     public function getRoleByEmail($email){
 
         $userRole = User::where('email',$email)->with('roles')->first();
-     
         return $userRole['roles']->value('name');
 
 

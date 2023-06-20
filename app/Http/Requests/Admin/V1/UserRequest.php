@@ -31,6 +31,7 @@ class UserRequest extends FormRequest
             UserController::class .  '@store'             => $this ->store(),
             UserController::class .  '@show'              => $this ->show(),
             UserController::class .  '@destroy'           => $this ->destroy(),
+            UserController::Class .  '@index'             => $this ->index(),
         };
     }
 
@@ -59,6 +60,18 @@ class UserRequest extends FormRequest
         request()->merge(['email' => $this->route('email')]);
         return [
             'email'         => 'required|string|email',
+        ];
+    }
+
+    public function index(){
+        request()->merge(['name' => $this->query('name'),
+                          'gender' => $this->query('gender'),
+                          'per_page' => $this->query('per_page')]);
+        return [
+            'name'          => 'nullable|string',
+            'gender'        => ['nullable','string',Rule::in(['female','male'])],
+            'per_page'      => 'required|max:100',
+            'role'          => ['nullable','string',Rule::in(['super-admin','user','tutor'])],
         ];
     }
 }

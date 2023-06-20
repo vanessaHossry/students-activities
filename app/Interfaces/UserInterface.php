@@ -6,7 +6,7 @@ interface UserInterface
 {
     public function getSelf();
     public function store($request);
-    public function index();
+    public function index($request);
 
     public function show($request);
 

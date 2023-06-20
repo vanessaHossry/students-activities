@@ -6,7 +6,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Http\Controllers\Client\V1\UserController           as V1ClientUserController;
+use App\Http\Controllers\Client\V1\UserController ;         
 class UserRequest extends FormRequest
 {
     /**
@@ -27,7 +27,10 @@ class UserRequest extends FormRequest
       
         $route_action= Route::current()->getActionName();
         return match($route_action) {
-            V1ClientUserController::class . '@signUp'            => $this->signUp(),
+            UserController::class . '@signUp'            => $this->signUp(),
+            UserController::class . '@requestReset'      => $this->requestReset(),
+            UserController::class . '@resetPassword'     => $this->resetPassword(),
+
         };
     }
 
@@ -41,6 +44,23 @@ class UserRequest extends FormRequest
             'date_of_birth' => 'required|date|before:2002-01-01',
             'gender'        => 'string|nullable',
             'role_slug'     => ['required','string',Rule::in(['user','tutor'])],
+        ];
+    }
+
+    public function requestReset(){
+        return [
+            'email'                => 'required|email|string|exists:users,email',
+        //     'old'               => 'password' => 'current_password:api',
+ 
+    ];
+    }
+
+    public function resetPassword(){
+        return[  
+        'token'                  => 'required|string',
+        'email'                  => 'required|string|email|exists:users,email',
+        'password'               =>  ['required','string', Password::min(6), 'confirmed'],
+        'password_confirmation'  =>  ['required'],
         ];
     }
 }

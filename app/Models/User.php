@@ -3,16 +3,17 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Crypt;
 use Spatie\Permission\Traits\HasRoles;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
 class User extends Authenticatable implements JWTSubject
@@ -20,6 +21,8 @@ class User extends Authenticatable implements JWTSubject
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasUuids, HasRoles;
     protected $table='users';
     protected $dates='deleted_at';
+
+    protected $appends = ['age'];
     /**
      * The attributes that are mass assignable.
      *
@@ -32,6 +35,7 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'date_of_birth',
         'gender',
+        'age'
     ];
 
     /**
@@ -66,5 +70,9 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+    public function getAgeAttribute()
+    {
+        return $this->attributes['age'] = Carbon::parse($this->date_of_birth)->age;
     }
 }

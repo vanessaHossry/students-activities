@@ -1,4 +1,5 @@
 <?php
 return [
-    "unauthorized" => "Unauthorized"
+    "unauthorized" => "Unauthorized",
+    "userNotFound"     => "No User Found",
 ];

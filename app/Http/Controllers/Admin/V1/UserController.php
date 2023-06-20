@@ -72,7 +72,15 @@ class UserController extends Controller
 *     summary="Get all Users",
 *     tags={"User"},
 *     security={{ "APIKey": {} }},
-* 
+*     @OA\Parameter(
+*        name="name", in="query",required=false, @OA\Schema(type="string",nullable=true)),
+*     @OA\Parameter(  
+*        name="gender", in="query",required=false, @OA\Schema(type="string")),
+*     @OA\Parameter( 
+*        name="role", in="query",required=false, @OA\Schema(type="string")),
+*     @OA\Parameter( 
+*        name="per_page", in="query",required=true, @OA\Schema(type="string")),
+*     
 *     @OA\Response(
 *         response=200,
 *         description="Successful operation",
@@ -90,11 +98,14 @@ class UserController extends Controller
 *     )
 * )
 */
-    public function index()
+    public function index(UserRequest $request)
     {
         try
            {
-            $users = $this->userRepository->index();
+            $users = $this->userRepository->index($request); 
+            // if(!isset($users[0])) 
+            // return $this->errorResponse(__("messages.userNotFound"),Response::HTTP_NOT_FOUND);
+            
             return $this->successResponse($users);
            } 
            catch (Exception $e) {
