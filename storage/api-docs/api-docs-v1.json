@@ -349,7 +349,7 @@
                 ]
             }
         },
-        "/client/v1/requestReset": {
+        "/client/v1/forgotPassword": {
             "post": {
                 "tags": [
                     "User"

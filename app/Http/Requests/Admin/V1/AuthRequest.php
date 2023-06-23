@@ -5,7 +5,7 @@ namespace App\Http\Requests\Admin\V1;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Http\Controllers\Admin\V1\AuthController             as V1AdminAuthController;
+use App\Http\Controllers\Admin\V1\AuthController;
 
 class AuthRequest extends FormRequest
 {
@@ -27,7 +27,7 @@ class AuthRequest extends FormRequest
         $route_action= Route::current()->getActionName();
         return match($route_action)
         {
-            V1AdminAuthController::class    .  "@login"          => $this->login(),
+            AuthController::class    .  "@login"          => $this->login(),
         };
 
     }

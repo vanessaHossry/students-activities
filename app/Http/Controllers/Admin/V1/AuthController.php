@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\Admin\V1\Docs;
 use App\Interfaces\AuthRepositoryInterface;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use App\Http\Requests\Admin\V1\AuthRequest              as  V1AdminAuthRequest ;
+use App\Http\Requests\Admin\V1\AuthRequest;            
 
 class AuthController extends Controller
 {
@@ -90,7 +90,7 @@ private $userRepository;
      *       ),
      * )
      */
-    public function login(V1AdminAuthRequest $request)
+    public function login(AuthRequest $request)
     {
         try {
          

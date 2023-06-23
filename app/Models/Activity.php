@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use App\Models\WeekDay;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Activity extends Model
@@ -30,7 +31,7 @@ class Activity extends Model
 
     public function weekdays()
     {
-        $this->belongsToMany(WeekDay::class, "activities_week")->withPivot('start_date', 'end_date');
+        return $this->belongsToMany(WeekDay::class, "activities_week")->withPivot('start_time', 'end_time')->withTimestamps();
     }
 
     public function getSlugOptions():SlugOptions

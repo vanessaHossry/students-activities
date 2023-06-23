@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client\V1;
 
 use Exception;
 use App\Models\User;
+use App\Traits\utilities;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -12,23 +13,26 @@ use App\Interfaces\UserInterface;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\Client\V1\UserRequest             as V1ClientUserRequest;
+use App\Http\Requests\Client\V1\UserRequest;
 
 class UserController extends Controller
 {
-    use ApiResponse, Docs;
+    use ApiResponse, utilities, Docs;
     private $userRepository;
     public function __construct(UserInterface $userRepository)
     {
         $this->middleware('auth.apikey');
         $this->middleware('auth:api',["except" => ["signUp", 'requestReset', 'resetPassword']]);
         $this->userRepository = $userRepository;
+
+        $this->middleware('permission:user.read', ['only' => ['getSelf']]);
+       
     }
 
-      // == GET
+    // == GET
 
  
-   /**
+    /**
     
 * @OA\Get(
 *     path="/client/v1/getSelf",
@@ -64,7 +68,7 @@ public function getSelf()
     }
 }
 
-  // --- sign up
+    // --- Sign Up
 
     /**
      
@@ -123,7 +127,7 @@ public function getSelf()
      * )
      *
       */
-public function signUp(V1ClientUserRequest $request){
+public function signUp(UserRequest $request){
     try {
         $user = $this->userRepository->store($request);
         return $this->successResponse($user);
@@ -133,10 +137,11 @@ public function signUp(V1ClientUserRequest $request){
     }
 }
 
-  /**
+    // == Forgot Password
+    /**
      
      * @OA\Post(
-     * path="/client/v1/requestReset",
+     * path="/client/v1/forgotPassword",
      * operationId="request",
      * tags={"User"},
      * security={{ "APIKey": {} }},
@@ -184,32 +189,32 @@ public function signUp(V1ClientUserRequest $request){
      *
       */
  
-public function requestReset(V1ClientUserRequest $request){
+public function forgotPassword(UserRequest $request){
         try {
-          //  $user = $this->userRepository->getUserByEmail($request->email);
-               $token =  DB::table('password_reset_tokens')->where('email',$request->email)->first('token');
+            //  $user = $this->userRepository->getUserByEmail($request->email);       //NOT USEFUL HERE
+            $token = DB::table('password_reset_tokens')->where('email', $request->email)->first('token');
             // option 1: return already existing token 
             //    if($token){
             //     return $this->successResponse($token);
             //    }
 
             //option 2: update and regenerate token
-                 if($token){
-                    $token = $this->generateToken('password_reset_tokens');
-                    DB::table('password_reset_tokens')->where('email',$request->email)->update(['token' => $token, 'created_at' => now()]);
-                    return $this->successResponse($token);
-                 }
-
+            if ($token) {
                 $token = $this->generateToken('password_reset_tokens');
-
-                DB::table('password_reset_tokens')->insert([
-                    "email" => $request->email,
-                    "token" => $token,
-                    "created_at" => now()
-                ]);
-                // DB::insert('insert into password_reset_tokens (email,token,created_at) values (?, ?, ?)', [$request->email, $token]);
+                DB::table('password_reset_tokens')->where('email', $request->email)->update(['token' => $token, 'created_at' => now()]);
                 return $this->successResponse($token);
-            
+            }
+
+            $token = $this->generateToken('password_reset_tokens');
+
+            DB::table('password_reset_tokens')->insert([
+                "email" => $request->email,
+                "token" => $token,
+                "created_at" => now()
+            ]);
+            // DB::insert('insert into password_reset_tokens (email,token,created_at) values (?, ?, ?)', [$request->email, $token]);
+            return $this->successResponse($token);
+
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -217,7 +222,9 @@ public function requestReset(V1ClientUserRequest $request){
 
     }
 
-     /**
+    // == Reset Password
+
+    /**
      
      * @OA\Post(
      * path="/client/v1/resetPassword",
@@ -271,8 +278,8 @@ public function requestReset(V1ClientUserRequest $request){
      *
       */
 
-public function resetPassword(V1ClientUserRequest $request){
-    try{
+public function resetPassword(UserRequest $request){
+        try {
             // $user = $this->userRepository->getUserByEmail($request->email);
             // if(isset($user)){ 
             $results = DB::table('password_reset_tokens')->where('email', $request->email)
@@ -285,11 +292,12 @@ public function resetPassword(V1ClientUserRequest $request){
             }
             return $this->errorResponse("token not found", Response::HTTP_NOT_FOUND);
 
-   // }
-}
-    catch(Exception $e){return $this->errorResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);}
+            // }
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
-}
+    }
 
 
 }

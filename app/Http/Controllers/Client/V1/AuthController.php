@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
-use App\Http\Requests\Client\V1\AuthRequest             as V1ClientAuthRequest;
+use App\Http\Requests\Client\V1\AuthRequest ;       
 
 class AuthController extends Controller
 {
@@ -76,7 +76,7 @@ class AuthController extends Controller
      *       ),
      * )
      */
-    public function login(V1ClientAuthRequest $request){
+    public function login(AuthRequest $request){
        try{
         
             $credentials = request(['email', 'password']);

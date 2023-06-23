@@ -28,7 +28,7 @@ class UserRequest extends FormRequest
         $route_action= Route::current()->getActionName();
         return match($route_action) {
             UserController::class . '@signUp'            => $this->signUp(),
-            UserController::class . '@requestReset'      => $this->requestReset(),
+            UserController::class . '@forgotPassword'      => $this->forgotPassword(),
             UserController::class . '@resetPassword'     => $this->resetPassword(),
 
         };
@@ -47,7 +47,7 @@ class UserRequest extends FormRequest
         ];
     }
 
-    public function requestReset(){
+    public function forgotPassword(){
         return [
             'email'                => 'required|email|string|exists:users,email',
         //     'old'               => 'password' => 'current_password:api',

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Activity;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Model;
@@ -24,7 +25,7 @@ class WeekDay extends Model
     ];
 
     public function activities(){
-        $this->belongsToMany(Activity::class, "activities_week");
+        return $this->belongsToMany(Activity::class, "activities_week")->withPivot('start_time', 'end_time')->withTimestamps();
     }
 
     function getSlugOptions():SlugOptions

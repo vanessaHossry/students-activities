@@ -3,10 +3,12 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Routing\Controllers\Middleware;
-use App\Http\Controllers\Admin\V1\UserController        as V1AdminUserController;
-use App\Http\Controllers\Client\V1\UserController       as V1ClientUserController;
+use App\Http\Controllers\Admin\V1\ActivitiesController;
 use App\Http\Controllers\Admin\V1\AuthController        as V1AdminAuthController;
+use App\Http\Controllers\Admin\V1\UserController        as V1AdminUserController;
 use App\Http\Controllers\Client\V1\AuthController       as V1ClientAuthController;
+use App\Http\Controllers\Client\V1\UserController       as V1ClientUserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,18 +29,22 @@ Route::group(
     ],
     function () {
         // --- Admin Authentication
-        Route::post('/login',                       [V1AdminAuthController::class, 'login']);
-        Route::get('/logout',                       [V1AdminAuthController::class, 'logout']);
-        Route::post('/refresh',                     [V1AdminAuthController::class, 'refresh']);
-        
-        
-        // --- Admin
-        Route::get('/getSelf',                      [V1AdminUserController::class, 'getSelf']);
-        Route::post('/store',                       [V1AdminUserController::class, 'store']);
-        Route::get('/index',                        [V1AdminUserController::class, 'index']);
-        Route::get('/show/{email}',                 [V1AdminUserController::class, 'show']);
-        Route::delete('/destroy/{email}',           [V1AdminUserController::class, 'destroy']);
-        Route::get('/getDeleted',                   [V1AdminUserController::class, 'getDeleted']);
+        Route::post('/login',                                       [V1AdminAuthController::class, 'login']);
+        Route::get('/logout',                                       [V1AdminAuthController::class, 'logout']);
+        Route::post('/refresh',                                     [V1AdminAuthController::class, 'refresh']);
+                        
+                        
+        // --- Admin                
+        Route::get('/getSelf',                                      [V1AdminUserController::class, 'getSelf']);
+        Route::post('/store',                                       [V1AdminUserController::class, 'store']);
+        Route::get('/index',                                        [V1AdminUserController::class, 'index']);
+        Route::get('/show/{email}',                                 [V1AdminUserController::class, 'show']);
+        Route::delete('/destroy/{email}',                           [V1AdminUserController::class, 'destroy']);
+        Route::get('/getDeleted',                                   [V1AdminUserController::class, 'getDeleted']);
+
+        // --- Activities
+        Route::post('/storeActivityWeek',                           [ActivitiesController::class,'store']);  
+        Route::put('/update-activity-week/{activity_slug}',         [ActivitiesController::class,'update']);             
     }
 );
 
@@ -55,8 +61,11 @@ Route::group(
        // --- User
        Route::get('/getSelf',                      [V1ClientUserController::class, 'getSelf']);
        Route::post('/signUp',                      [V1ClientUserController::class , 'signUp']);
-       Route::post('/requestReset',                [V1ClientUserController::class, 'requestReset']);
+       Route::post('/forgotPassword',              [V1ClientUserController::class, 'forgotPassword']);
        Route::post('/resetPassword',               [V1ClientUserController::Class, 'resetPassword']);
+
+       
+       
       
     }
 );

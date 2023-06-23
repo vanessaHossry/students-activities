@@ -17,6 +17,9 @@ class DatabaseSeeder extends Seeder
             PortalSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
+            PermissionSeeder::class,
+            apiKeySeeder::class,
+            ActivitySeeder::class,
         ]);
     }
 }

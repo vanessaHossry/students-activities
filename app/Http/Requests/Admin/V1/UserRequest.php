@@ -52,14 +52,14 @@ class UserRequest extends FormRequest
     {
         request()->merge(['email' => $this->route('email')]);
         return [
-             'email'       => 'required|email|string',     
+             'email'       => 'required|email|string|exists:users',     
         ];
     }
 
     public function destroy(){
         request()->merge(['email' => $this->route('email')]);
         return [
-            'email'         => 'required|string|email',
+            'email'         => 'required|string|email|exists:users',
         ];
     }
 

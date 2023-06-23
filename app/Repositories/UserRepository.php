@@ -37,7 +37,7 @@ class UserRepository implements UserInterface
         
         if (isset($request->name)) {
         $users = $users->where('first_name', 'LIKE', '%' . $request->name . '%')
-        ->orWhere('last_name', 'LIKE', '%' . $request->name . '%');
+                       ->orWhere('last_name', 'LIKE', '%' . $request->name . '%');
       }
         if(isset($request->gender)){
         $users = $users->where('gender',$request->gender);
@@ -60,7 +60,7 @@ class UserRepository implements UserInterface
         // $users = User::whereNotNull('deleted_at')->withTrashed()->get();
 
         //-- this query returns all the users (DELETED + NOT DELETED)
-        $users = User::withTrahsed()->get();
+        $users = User::withTrashed()->get();
 
         //-- this query returns NOT DELETED users
         $users = User::get();   
@@ -87,4 +87,5 @@ class UserRepository implements UserInterface
         // $query->where('name', 'Super Admin');
         // })->first();
     }
+    
 }

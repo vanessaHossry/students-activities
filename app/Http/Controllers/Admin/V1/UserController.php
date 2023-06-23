@@ -24,6 +24,10 @@ class UserController extends Controller
         $this->middleware('auth.apikey');
         $this->middleware('auth:api');
         $this->userRepository = $userRepository;
+        $this->middleware('permission:admin.read', ['only' => ['getSelf']]);
+        $this->middleware('permission:admin.listusers', ['only' => ['index','show','getDeleted']]);
+        $this->middleware('permission:admin.create', ['only' => ['store']]);
+        $this->middleware('permission:admin.deleteuser', ['only' => ['destroy']]);
     }
 
     // == GET
@@ -322,7 +326,7 @@ class UserController extends Controller
     {
         try{
             $user = $this->userRepository->getUserByEmail($request->email);
-            $user_id = $user->value('id');
+            $user_id = $user->id; 
             $user = User::find($user_id);
             $user->delete();
             

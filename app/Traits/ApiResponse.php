@@ -17,7 +17,7 @@ trait ApiResponse
     }
 
     // --- error response
-    public function errorResponse($error = null, $code = Response::HTTP_OK)
+    public function errorResponse($error = null, $code = Response::HTTP_INTERNAL_SERVER_ERROR)
     {
         return response()->json([
             "error" => $error,
@@ -25,13 +25,5 @@ trait ApiResponse
         ], $code);
     }
 
-    public function generateToken($table){
-        $res=true;
-        while($res){
-            $token = Str::random(64);
-            $res = DB::select("select * from $table where token = ?", [$token]);
-        }
-        return $token;
-       
-    }
+   
 }

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('activities_week', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->uuid('activity_id');
             $table->uuid('week_day_id');
             $table->time('start_time')->nullable();
@@ -21,7 +21,7 @@ return new class extends Migration
 
             $table->foreign('activity_id')->references('id')->on('activities');
             $table->foreign('week_day_id')->references('id')->on('week_days');
-            $table->unique('activity_id','week_day_id');
+            $table->unique(['activity_id','week_day_id']);
         });
     }
 
