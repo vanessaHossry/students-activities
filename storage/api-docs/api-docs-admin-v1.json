@@ -153,24 +153,28 @@
                     }
                 ],
                 "requestBody": {
+                    "description": "Body request needed to update activity weekdays",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "weekday": {
+                                    "activity_hours": {
                                         "type": "array",
                                         "items": {
-                                            "type": "string"
+                                            "properties": {
+                                                "weekday": {
+                                                    "type": "string"
+                                                },
+                                                "start_time": {
+                                                    "type": "string"
+                                                },
+                                                "end_time": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
                                         }
-                                    },
-                                    "start_time": {
-                                        "type": "string",
-                                        "example": "09:00"
-                                    },
-                                    "end_time": {
-                                        "type": "string",
-                                        "example": "09:00"
                                     }
                                 },
                                 "type": "object"

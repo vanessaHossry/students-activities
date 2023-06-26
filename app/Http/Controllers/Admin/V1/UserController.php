@@ -232,7 +232,7 @@ class UserController extends Controller
      *               @OA\Property(property="password",description="password"),
      *               @OA\Property(property="date_of_birth", description="date of birth", type="date"),
      *               @OA\Property(property="gender",description="gender"),
-     *               @OA\Property(property="role_slug",description="role slug"),
+     *               @OA\Property(property="role_slug",description="role slug"),          
      *            ),
      *        ),
      *    ),

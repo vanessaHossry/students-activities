@@ -28,11 +28,11 @@ class PermissionSeeder extends Seeder
                     $permission = Permission::create([
                         "name" => $value->name,
                     ]);
-
-                    foreach ($value->roles as $roleId) {
-                        $role = Role::find($roleId);
-                        $permission->assignRole($role);
-                    }
+                    $permission->assignRole($value->roles);
+                    // foreach ($value->roles as $roleId) {
+                    //     $role = Role::find($roleId);
+                    //     $permission->assignRole($role); 
+                    // }
 
                 }
                 DB::table("seeders")->insert(["name" => "PermissionSeeder"]);

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Portal;
 use App\Interfaces\UserInterface;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,6 +16,22 @@ class UserRepository implements UserInterface
 
     public function store($request)
     {
+        $email = Auth::user()->email;
+        $role_name = $this->getRoleByEmail($email);
+      
+
+        if($role_name == "Super Admin") {
+            $role = Role::where("slug", $request->role_slug)->first();
+            $role_id= $role->id;
+            $portal_id= $role->portal_id;
+         }
+        else{ 
+            $role = Role::where("slug", "user")->first();
+            $role_id = $role->id;
+            $portal_id = $role->portal_id;
+        }
+        
+       
         $user = User::create([
             "first_name" => $request->first_name,
             "last_name" => $request->last_name,
@@ -22,9 +39,10 @@ class UserRepository implements UserInterface
             "password" => $request->password,
             "date_of_birth" => $request->date_of_birth,
             "gender" => $request->gender,
+            "portal_id" => $portal_id,
 
         ]);
-        $role_id = Role::where("slug", $request->role_slug)->value('id');
+       
 
         $user->assignRole($role_id);
 
@@ -36,8 +54,11 @@ class UserRepository implements UserInterface
         $users = User::query();
         
         if (isset($request->name)) {
-        $users = $users->where('first_name', 'LIKE', '%' . $request->name . '%')
-                       ->orWhere('last_name', 'LIKE', '%' . $request->name . '%');
+            //without the wrapping record kevin was still showing with female filter
+            $users = $users->where(function ($query) use ($request) {
+                $query->where('first_name', 'LIKE', '%' . $request->name . '%')
+                    ->orWhere('last_name', 'LIKE', '%' . $request->name . '%');
+            });
       }
         if(isset($request->gender)){
         $users = $users->where('gender',$request->gender);

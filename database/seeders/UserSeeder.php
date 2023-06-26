@@ -5,6 +5,7 @@ use DB;
 use File;
 use Exception;
 use App\Models\User;
+use App\Models\Portal;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -24,6 +25,7 @@ class UserSeeder extends Seeder
 
                     DB::beginTransaction();
                     foreach($users as $value){
+                        $portal= Portal::where("slug", $value->portal_slug)->value('id'); 
                         $user=User::create([
                             "first_name"=>$value->first_name,
                             "last_name"=>$value->last_name,
@@ -31,13 +33,14 @@ class UserSeeder extends Seeder
                             "password"=> $value->password,
                             "date_of_birth"=>$value->date_of_birth,
                             "gender"=>$value->gender,
-                    
+                            "portal_id"=>$portal,
                         ]);
                        
 
                         $role=Role::where("slug", $value->role_slug)->first(); 
-                        
                         $user->assignRole($role);
+                        
+                      
                            
                        
                     }

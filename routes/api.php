@@ -55,17 +55,14 @@ Route::group(
     ],
     function () {
        // --- User Authentication 
-       Route::post('/login',                       [V1ClientAuthController::class, 'login']);
-       Route::get('/logout',                       [V1ClientAuthController::class , 'logout']);
+       Route::post('/login',                                        [V1ClientAuthController::class, 'login']);
+       Route::get('/logout',                                        [V1ClientAuthController::class , 'logout']);
+                
+       // --- User                   
+       Route::get('/getSelf',                                       [V1ClientUserController::class, 'getSelf']);
+       Route::post('/signUp',                                       [V1ClientUserController::class , 'signUp']);
+       Route::post('/forgotPassword',                               [V1ClientUserController::class, 'forgotPassword']);
+       Route::post('/resetPassword',                                [V1ClientUserController::Class, 'resetPassword']);
 
-       // --- User
-       Route::get('/getSelf',                      [V1ClientUserController::class, 'getSelf']);
-       Route::post('/signUp',                      [V1ClientUserController::class , 'signUp']);
-       Route::post('/forgotPassword',              [V1ClientUserController::class, 'forgotPassword']);
-       Route::post('/resetPassword',               [V1ClientUserController::Class, 'resetPassword']);
-
-       
-       
-      
-    }
+       }
 );

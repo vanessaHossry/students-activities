@@ -30,4 +30,8 @@ class Portal extends Model
         ->saveSlugsTo('slug')
         ->preventOverwrite();
     }
+
+    public function users(){
+        return $this->hasMany(User::class);
+    }
 }

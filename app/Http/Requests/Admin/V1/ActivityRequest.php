@@ -45,13 +45,19 @@ class ActivityRequest extends FormRequest
 
     public function update()
     {
-
+       
         request()->merge(['activity_slug' => $this->route('activity_slug')]);
+        // request()->merge(
+        //     collect(json_decode(request()->getContent(),true))->transform(function ($value) {
+        //         return is_string($value) ? strtolower($value) : $value;
+        //     })->all()
+        // );
         return [
             "activity_slug" => 'required|string|exists:activities,slug',
-            "weekday.*" => 'required|string|exists:week_days,slug',
-            "start_time" => 'required|date_format:H:i',
-            "end_time" => 'required|date_format:H:i|after:start_time',
+            "activity_hours" => 'array',
+            "activity_hours.*.weekday" => 'required|string|exists:week_days,slug',
+            "activity_hours.*.start_time" => 'required|date_format:H:i',
+            "activity_hours.*.end_time" => 'required|date_format:H:i|after:start_time',
         ];
     }
 }

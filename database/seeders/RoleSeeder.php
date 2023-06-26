@@ -26,7 +26,7 @@ class RoleSeeder extends Seeder
                 DB::beginTransaction();
                 foreach($roles as $role)
                 {
-                    $portal = Portal::where('slug',$role->portal_slug)->first()->value('id'); 
+                    $portal = Portal::where('slug',$role->portal_slug)->value('id'); 
                     Role::create(
                         [
                             "name"=> $role->name,

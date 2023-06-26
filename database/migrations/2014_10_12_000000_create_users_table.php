@@ -20,9 +20,12 @@ return new class extends Migration
             $table->string('password');
             $table->date('date_of_birth');
             $table->string('gender')->nullable();
+            $table->uuid('portal_id');
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
+
+           // $table->foreign('portal_id')->references('id')->on('portals');
         });
     }
 

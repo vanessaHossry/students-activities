@@ -35,7 +35,8 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'date_of_birth',
         'gender',
-        'age'
+        'age',
+        'portal_id',
     ];
 
     /**
@@ -74,5 +75,9 @@ class User extends Authenticatable implements JWTSubject
     public function getAgeAttribute()
     {
         return $this->attributes['age'] = Carbon::parse($this->date_of_birth)->age;
+    }
+
+    public function portal(){
+        return $this->belongsTo(Portal::class);
     }
 }

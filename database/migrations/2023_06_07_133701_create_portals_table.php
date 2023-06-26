@@ -17,6 +17,11 @@ return new class extends Migration
             $table->string('name');
             $table->timestamps();
         });
+
+        Schema::table('users', function (Blueprint $table) {
+            // Specify foreign key relationship
+            $table->foreign('portal_id')->references('id')->on('portals');
+        });
     }
 
     /**
