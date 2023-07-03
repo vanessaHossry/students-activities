@@ -19,4 +19,26 @@ class ActivityRepository implements ActivityInterface
         $weekday_id=$this->getWeekDayBySlug($request);
         return  DB::table('activities_week')->where('activity_id',$activity->id)->where('week_day_id',$weekday_id)->first();
     }
+
+    public function storeActivity($request){
+        $activity = Activity::create([
+            "name" => $request->name,
+            "price" => $request->price,
+        ]);
+        return $activity;
+    }
+    public function getActivities(){
+        return Activity::paginate(15);
+    }
+
+    public function getDeletedActivities(){
+       // return Activity::onlyTrashed()->get('slug'); can not use in array on this
+       return Activity::onlyTrashed()->pluck('slug')->toArray();
+    }
+
+    public function isDeletedActivity($request){
+        $trashedSlugs= $this->getDeletedActivities();
+       $isDeleted = in_array($request->activity_slug,$trashedSlugs);
+        return $isDeleted;
+    }
 }

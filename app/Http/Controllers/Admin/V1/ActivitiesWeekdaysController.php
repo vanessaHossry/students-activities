@@ -12,10 +12,10 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Interfaces\ActivityInterface;
 use App\Http\Controllers\Admin\V1\Docs;
-use App\Http\Requests\admin\V1\ActivityRequest;
+use App\Http\Requests\admin\V1\ActivityWeekdayRequest;
 
 
-class ActivitiesController extends Controller
+class ActivitiesWeekdaysController extends Controller
 {
     use ApiResponse, Docs;
     private $activityRepository;
@@ -30,8 +30,8 @@ class ActivitiesController extends Controller
     /**
      
      * @OA\Post(
-     * path="/admin/v1/storeActivityWeek",
-     * tags={"Activity"},
+     * path="/admin/v1/store-activity-week",
+     * tags={"Activity-Week"},
      * summary="user signup",
      * security={{ "APIKey": {} }},
      *     @OA\RequestBody(
@@ -48,7 +48,7 @@ class ActivitiesController extends Controller
      *            ),
      *        ),
      *    ),
-     *      @OA\Response(
+     *                 @OA\Response(
      *          response="200",
      *          description="Successful Operation",
      *          @OA\JsonContent(
@@ -58,6 +58,10 @@ class ActivitiesController extends Controller
      *          @OA\Property(property="message", type="string", description="message" ),
      *          ),
      *        ),
+     *
+     *
+     *
+     *
      *       @OA\Response(
      *          response="422",
      *          description="Unprocessable Entity",
@@ -67,6 +71,7 @@ class ActivitiesController extends Controller
      *          @OA\Property(property="data",type="array",  @OA\Items( type="object"  ),description="data" ),
      *          @OA\Property(property="message", type="string", description="message" ),
      *          ),
+     *
      *       ),
      *      @OA\Response(
      *          response=400,
@@ -78,10 +83,12 @@ class ActivitiesController extends Controller
      *          @OA\Property(property="message", type="string", description="message" ),
      *          ),
      *       ),
+     *
+
      * )
      *
       */
-    public function store(ActivityRequest $request){
+    public function store(ActivityWeekdayRequest $request){
         try{
             $activity = $this->activityRepository->getActivityBySlug($request);
             $weekday_id = $this->activityRepository->getWeekDayBySlug($request);
@@ -106,7 +113,7 @@ class ActivitiesController extends Controller
      
      * @OA\Put(
      *     path="/admin/v1/update-activity-week/{activity_slug}",
-     *     tags={"Activity"},
+     *     tags={"Activity-Week"},
      *     security={{ "APIKey": {} }},
      *      @OA\Parameter(
      *         name="activity_slug",
@@ -166,7 +173,7 @@ class ActivitiesController extends Controller
      * )
      */
 
-    public function update(ActivityRequest $request)
+    public function update(ActivityWeekdayRequest $request)
     {
         try {
             $activity = $this->activityRepository->getActivityBySlug($request);
@@ -183,9 +190,7 @@ class ActivitiesController extends Controller
                     'end_time' => $end_time
                 ];
 
-
             }
-
             $activity->weekdays()->sync($syncData);
             return $this->successResponse(__("messages.records_attached"));
             
@@ -202,6 +207,7 @@ class ActivitiesController extends Controller
             // }
             // $activity->weekdays()->syncWithPivotValues($a, ["start_time" => $request->start_time, "end_time" => $request->end_time]);
             // return $this->successResponse(__("messages.records_attached"));
+
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }

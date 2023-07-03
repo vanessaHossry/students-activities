@@ -26,6 +26,7 @@ class AuthController extends Controller
 
     // --- login
      /**
+      
      * @OA\Post(
      * path="/client/v1/login",
      * tags={"User Auth"},
@@ -100,6 +101,7 @@ class AuthController extends Controller
 
      // --- logout 
     /**
+     
      * @OA\Get(
      * 
      * path="/client/v1/logout",

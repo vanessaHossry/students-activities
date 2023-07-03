@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Requests\admin\V1;
+namespace App\Http\Requests\admin\v1;
 
-use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Http\Controllers\Admin\V1\ActivitiesController;
+use App\Http\Controllers\admin\v1\ActivityController;
 
 class ActivityRequest extends FormRequest
 {
@@ -26,38 +25,43 @@ class ActivityRequest extends FormRequest
     public function rules(): array
     {
         $route_action= Route::current()->getActionName();
-        Log::info($route_action);
         return match($route_action)
         {
-            ActivitiesController::class    .  "@store"           => $this->store(),
-            ActivitiesController::class    .  "@update"          => $this->update(),
+            ActivityController::class    .  "@store"           => $this->store(),
+            ActivityController::class    .  "@show"            => $this->show(),
+            ActivityController::class    .  "@update"          => $this->update(),
+            ActivityController::class    .  "@destroy"          => $this->destroy(),
+            
         };
     }
-    public function store()
-    {
+    public function store(){
         return [
-            "activity_slug" => 'required|string|exists:activities,slug',
-            "weekday" => 'required|string|exists:week_days,slug',
-            "start_time" => 'required|date_format:H:i',
-            "end_time" => 'required|date_format:H:i|after:start_time',
+            "name" => "required|string|unique:activities,name",
+            "price" =>"required|numeric",
         ];
     }
 
-    public function update()
-    {
-       
+    public function show(){
         request()->merge(['activity_slug' => $this->route('activity_slug')]);
-        // request()->merge(
-        //     collect(json_decode(request()->getContent(),true))->transform(function ($value) {
-        //         return is_string($value) ? strtolower($value) : $value;
-        //     })->all()
-        // );
         return [
             "activity_slug" => 'required|string|exists:activities,slug',
-            "activity_hours" => 'array',
-            "activity_hours.*.weekday" => 'required|string|exists:week_days,slug',
-            "activity_hours.*.start_time" => 'required|date_format:H:i',
-            "activity_hours.*.end_time" => 'required|date_format:H:i|after:start_time',
+        ];
+    }
+
+    public function update(){
+        request()->merge(['activity_slug' => $this->route('activity_slug')]);
+        return [
+           // "activity_slug" => 'required|string|exists:activities,slug,deleted_at,NULL',  it works if i don't want to display that the act is deleted
+           "activity_slug" => 'required|string|exists:activities,slug', 
+           "price" => 'required|numeric',
+        ];
+    }
+
+    
+    public function destroy(){
+        request()->merge(['activity_slug' => $this->route('activity_slug')]);
+        return [
+            "activity_slug" => 'required|string|exists:activities,slug',
         ];
     }
 }

@@ -1,8 +1,13 @@
 [
-    {"name":"user.read","roles":[1,2]},
+    {"name":"destroy-user","roles":[3]},
+    {"name":"create-user","roles":[3]},
+    {"name":"get-deleted-users","roles":[1,3]},
+
+    {"name":"create-activity","roles":[3]},
+    {"name":"destroy-activity","roles":[3]},
+    {"name":"update-activity-price","roles":[3,1]},
+
+    {"name":"create-role","roles":[3]},
+    {"name":"give-permission","role":[3]}
     
-    {"name":"admin.read","roles":[3]},
-    {"name":"admin.listusers","roles":[3]},
-    {"name":"admin.create","roles":[3]},
-    {"name":"admin.deleteuser","roles":[3]}
 ]

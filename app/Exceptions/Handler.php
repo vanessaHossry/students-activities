@@ -38,6 +38,9 @@ class Handler extends ExceptionHandler
         if($exception instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException){
             return $this->errorResponse("METHOD NOT ALLOWED", Response::HTTP_METHOD_NOT_ALLOWED);
         }
+        if($exception instanceof \Spatie\Permission\Exceptions\UnauthorizedException){
+            return $this->errorResponse("user does not have the right permissions", Response::HTTP_FORBIDDEN);
+        }
 
         return parent::render($request, $exception);
     }

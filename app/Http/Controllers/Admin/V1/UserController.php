@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\V1;
 use Exception;
 
 use App\Models\User;
+use App\Models\Portal;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -24,10 +25,11 @@ class UserController extends Controller
         $this->middleware('auth.apikey');
         $this->middleware('auth:api');
         $this->userRepository = $userRepository;
-        $this->middleware('permission:admin.read', ['only' => ['getSelf']]);
-        $this->middleware('permission:admin.listusers', ['only' => ['index','show','getDeleted']]);
-        $this->middleware('permission:admin.create', ['only' => ['store']]);
-        $this->middleware('permission:admin.deleteuser', ['only' => ['destroy']]);
+       
+   
+        $this->middleware('permission:create-user', ['only' => ['store']]);
+        $this->middleware('permission:destroy-user', ['only' => ['destroy']]);
+        $this->middleware('permission:get-deleted-users', ['only' => ['getDeleted']]);
     }
 
     // == GET
@@ -174,7 +176,7 @@ class UserController extends Controller
 
     // --- deleted users
     /**
-        
+     
     * @OA\Get(
     *     path="/admin/v1/getDeleted",
     *     summary="Get all Deleted Users",
@@ -283,6 +285,7 @@ class UserController extends Controller
 
     // --- delete a user
     /**
+     
      * @OA\Delete(
      *      path="/admin/v1/destroy/{email}",
      *      operationId="deleteUserByEmail",
@@ -337,5 +340,43 @@ class UserController extends Controller
         }
     }
 
+     /**
+    
+* @OA\Get(
+*     path="/admin/v1/portal-count-users",
+*     summary="Get all portals",
+*     tags={"User"},
+*     security={{ "APIKey": {} }},     
+*     @OA\Response(
+*         response=200,
+*         description="Successful operation",
+*         @OA\JsonContent(
+*          type="object",
+*          @OA\Property(property="success", type="boolean", description="status" ),
+*          @OA\Property(property="data", type="object", description="data" ),
+*          @OA\Property(property="message", type="string", description="message" ),
+*          ),
+* 
+*     ),
+*     @OA\Response(
+*         response=401,
+*         description="Unauthorized"
+*     )
+* )
+*/
+
+    public function getPortalsUserCount(){
+       
+        $portals = Portal::withCount('users')->get(); 
+        return $portals;
+        // $a=[];
+        // foreach($portals as $portal)
+        // {
+        //     $count = $portal->users_count;
+        //     $a[$portal->slug] = $count." users";
+
+        // }
+        // return $this->successResponse($a);
+    }
    
 }

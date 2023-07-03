@@ -25,7 +25,7 @@ class UserController extends Controller
         $this->middleware('auth:api',["except" => ["signUp", 'requestReset', 'resetPassword']]);
         $this->userRepository = $userRepository;
 
-        $this->middleware('permission:user.read', ['only' => ['getSelf']]);
+      
        
     }
 
@@ -38,7 +38,7 @@ class UserController extends Controller
 *     path="/client/v1/getSelf",
 *     summary="Get self User",
 *     tags={"User"},
-* security={{ "APIKey": {} }},
+*     security={{ "APIKey": {} }},
 * 
 *     @OA\Response(
 *         response=200,
@@ -69,7 +69,6 @@ public function getSelf()
 }
 
     // --- Sign Up
-
     /**
      
      * @OA\Post(
@@ -222,7 +221,6 @@ public function forgotPassword(UserRequest $request){
     }
 
     // == Reset Password
-
     /**
      
      * @OA\Post(

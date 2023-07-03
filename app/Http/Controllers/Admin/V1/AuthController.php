@@ -40,6 +40,7 @@ private $userRepository;
 
     // --- login
     /**
+     
      * @OA\Post(
      * path="/admin/v1/login",
      * tags={"Auth"},
@@ -120,6 +121,7 @@ private $userRepository;
 
     // --- logout 
     /**
+     
      * @OA\Get(
      * 
      * path="/admin/v1/logout",

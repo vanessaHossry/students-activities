@@ -43,7 +43,7 @@ class UserRequest extends FormRequest
             'password'      => ['required', 'string', Password::min(6)],
             'date_of_birth' => 'required|date|before:2002-01-01',
             'gender'        => 'string|nullable',
-            'role_slug'     => ['required','string',Rule::in(['user','tutor'])],
+            //'role_slug'     => ['required','string',Rule::in(['user','tutor'])],
         ];
     }
 
