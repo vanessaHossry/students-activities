@@ -5,11 +5,12 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Routing\Controllers\Middleware;
 use App\Http\Controllers\admin\v1\RoleController;
 use App\Http\Controllers\admin\v1\ActivityController;
-use App\Http\Controllers\Admin\V1\ActivitiesWeekdaysController;
+use App\Http\Controllers\client\v1\ActivitiesWeekdaysController    as V1ClientActivitiesWeekdaysController;
 use App\Http\Controllers\Admin\V1\AuthController        as V1AdminAuthController;
 use App\Http\Controllers\Admin\V1\UserController        as V1AdminUserController;
 use App\Http\Controllers\Client\V1\AuthController       as V1ClientAuthController;
 use App\Http\Controllers\Client\V1\UserController       as V1ClientUserController;
+use App\Http\Controllers\Admin\V1\ActivitiesWeekdaysController      as V1AdminActivitiesWeekdaysController;
 
 
 /*
@@ -46,8 +47,9 @@ Route::group(
         Route::get('/portal-count-users',                           [V1AdminUserController::class, 'getPortalsUserCount']);
 
         // --- Activity Weekdays
-        Route::post('/store-activity-week',                         [ActivitiesWeekdaysController::class,'store']);  
-        Route::put('/update-activity-week/{activity_slug}',         [ActivitiesWeekdaysController::class,'update']); 
+        Route::post('/store-activity-week',                         [V1AdminActivitiesWeekdaysController::class,'store']);  
+        Route::put('/update-activity-week/{activity_slug}',         [V1AdminActivitiesWeekdaysController::class,'update']); 
+        Route::put('/delete-activity-week/{activity_slug}',         [V1AdminActivitiesWeekdaysController::class,'destroy']); 
 
         // --- Activity
         Route::post('/store-activity',                              [ActivityController::class, 'store']);
@@ -72,6 +74,7 @@ Route::group(
        // --- User Authentication 
        Route::post('/login',                                        [V1ClientAuthController::class, 'login']);
        Route::get('/logout',                                        [V1ClientAuthController::class , 'logout']);
+       Route::post('/refresh',                                      [V1ClientAuthController::class, 'refresh']);
                 
        // --- User                   
        Route::get('/getSelf',                                       [V1ClientUserController::class, 'getSelf']);
@@ -82,6 +85,9 @@ Route::group(
        // --- activity
        Route::get('/get-activities',                                [ActivityController::class, 'index']);
        Route::get('/get-activity-by-slug/{activity_slug}',          [ActivityController::class, 'show']);
+
+       // --- activity weekdays
+       Route::get('/get-activities-weekdays',                       [V1ClientActivitiesWeekdaysController::class, 'index']);
 
       
        }

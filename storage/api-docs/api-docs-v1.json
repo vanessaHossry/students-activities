@@ -16,6 +16,49 @@
         }
     ],
     "paths": {
+        "/client/v1/get-activities-weekdays": {
+            "get": {
+                "tags": [
+                    "Activity-Week"
+                ],
+                "summary": "Rertrieve all activities with week day",
+                "operationId": "getAllActivitiesWeekdays",
+                "responses": {
+                    "200": {
+                        "description": "Successful Operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "APIKey": []
+                    }
+                ]
+            }
+        },
         "/client/v1/get-activities": {
             "get": {
                 "tags": [
@@ -290,6 +333,60 @@
                     },
                     "401": {
                         "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "APIKey": []
+                    }
+                ]
+            }
+        },
+        "/client/v1/refresh": {
+            "post": {
+                "tags": [
+                    "User Auth"
+                ],
+                "summary": "Refresh access token",
+                "description": "Refreshes the JWT access token",
+                "operationId": "676b47dfd7781f9e7185e6cc3f13cc3a",
+                "responses": {
+                    "200": {
+                        "description": "Token refreshed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "bearer"
+                                        },
+                                        "expires_in": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [

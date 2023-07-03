@@ -141,4 +141,48 @@ class AuthController extends Controller
         }
     }
 
+       /**
+    * @OA\Post(
+    *     path="/client/v1/refresh",
+    *     summary="Refresh access token",
+    *     description="Refreshes the JWT access token",
+    *     tags={"User Auth"},
+    *     security={{"APIKey": {}}},
+    *     @OA\Response(
+    *         response=200,
+    *         description="Token refreshed successfully",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="access_token", type="string"),
+    *             @OA\Property(property="token_type", type="string", example="bearer"),
+    *             @OA\Property(property="expires_in", type="integer")
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=401,
+    *         description="Unauthorized",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="error", type="string")
+    *         )
+    *     )
+    * )
+    */
+
+
+ public function refresh(){
+    try{
+     // $token = JWTAuth::getToken();
+     // return $this->handleReturn(true, null, __("messages.updated_successfully"))
+     //             ->withCookie(cookie('token', JWTAuth::refresh($token),  Auth::factory()->getTTL() * 2, null, null, true, true, false, 'none'));
+     
+     $new_token = auth()->refresh();
+     return $this->successResponse($new_token)->withCookie(cookie('token', $new_token, (Auth::factory()->getTTL() * 2) , null, null, true, true, false, 'none'));
+    } 
+    catch(Exception $e)
+    {
+     return $this->errorResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+ }
+
+
+
 }

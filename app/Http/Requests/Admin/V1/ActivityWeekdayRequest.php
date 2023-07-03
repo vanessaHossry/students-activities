@@ -33,6 +33,7 @@ class ActivityWeekdayRequest extends FormRequest
         {
             ActivitiesWeekdaysController::class    .  "@store"           => $this->store(),
             ActivitiesWeekdaysController::class    .  "@update"          => $this->update(),
+            ActivitiesWeekdaysController::class    .  "@destroy"         => $this->destroy(),
             
         };
     }
@@ -62,6 +63,14 @@ class ActivityWeekdayRequest extends FormRequest
             "activity_hours.*.weekday" => 'required|string|exists:week_days,slug',
             "activity_hours.*.start_time" => 'required|date_format:H:i',
             "activity_hours.*.end_time" => 'required|date_format:H:i|after:start_time',
+        ];
+    }
+
+    public function destroy(){
+        request()->merge(['activity_slug' => $this->route('activity_slug')]);
+        return [
+            "activity_slug" => 'required|string|exists:activities,slug',
+            "weekday" => 'required|string|exists:week_days,slug'
         ];
     }
 }
