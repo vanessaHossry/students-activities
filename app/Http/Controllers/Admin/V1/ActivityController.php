@@ -21,7 +21,7 @@ class ActivityController extends Controller
         $this->activityRepository = $activityRepository;
         
         $this->middleware('permission:create-activity', ['only' => ['store']]);
-        $this->middleware('permission:destroy-activity', ['only' => ['destroy']]);
+        $this->middleware('permission:destroy-activity', ['only' => ['destroy','restore']]);
         $this->middleware('permission:update-activity-price', ['only' => ['update']]);
        
     }
@@ -329,4 +329,219 @@ class ActivityController extends Controller
 
 
      }
+
+     // --- restore deleted activity
+         /**
+     
+     * @OA\Patch(
+     *     path="/admin/v1/restore-activity/{activity_slug}",
+     *     operationId="restoreActivity",
+     *     summary="restore activity",
+     *     tags={"Activity"},
+     *     security={{ "APIKey": {} }},
+     *     @OA\Parameter(
+     *         name="activity_slug",
+     *         in="path",
+     *         description="activity slug",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *           @OA\Response(
+     *          response="200",
+     *          description="Successful Operation",
+     *          @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property(property="success", type="boolean", description="status" ),
+     *          @OA\Property(property="data", type="object", description="data" ),
+     *          @OA\Property(property="message", type="string", description="message" ),
+     *          ),
+     *        ),
+     *
+     *
+     *
+     *
+     *       @OA\Response(
+     *          response="422",
+     *          description="Unprocessable Entity",
+     *          @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property(property="success", type="boolean", description="status" ),
+     *          @OA\Property(property="data",type="array",  @OA\Items( type="object"  ),description="data" ),
+     *          @OA\Property(property="message", type="string", description="message" ),
+     *          ),
+     *
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request",
+     *          @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property(property="success", type="boolean", description="status" ),
+     *          @OA\Property(property="data",type="array",  @OA\Items( type="object"  ),description="data" ),
+     *          @OA\Property(property="message", type="string", description="message" ),
+     *          ),
+     *       ),
+     *
+     * )
+     */
+
+ public function restore(ActivityRequest $request){
+    try{
+        
+       
+        $isDeleted = $this->activityRepository->isDeletedActivity($request);
+        
+        if($isDeleted) {
+        $activity = $this->activityRepository->getDeletedActivityBySlug($request); 
+        $activity->restore();
+        return $this->successResponse($activity->name." successfully restored");
+        }
+
+        $activity = $this->activityRepository->getActivityBySlug($request);
+        if(!empty($activity)){
+            return $this->successResponse($activity->name." already active");
+        }
+        return $this->errorResponse(__("messages.query_denied"),Response::HTTP_NOT_FOUND);
+
+    } catch(Exception $e){
+        return $this->errorResponse($e->getMessage(),Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+ }
+
+     // --- deactivate activity
+          /**
+     
+     * @OA\Patch(
+     *     path="/admin/v1/deactivate-activity/{activity_slug}",
+     *     operationId="deactivateActivity",
+     *     summary="deactivate activity",
+     *     tags={"Activity"},
+     *     security={{ "APIKey": {} }},
+     *     @OA\Parameter(
+     *         name="activity_slug",
+     *         in="path",
+     *         description="activity slug",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *           @OA\Response(
+     *          response="200",
+     *          description="Successful Operation",
+     *          @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property(property="success", type="boolean", description="status" ),
+     *          @OA\Property(property="data", type="object", description="data" ),
+     *          @OA\Property(property="message", type="string", description="message" ),
+     *          ),
+     *        ),
+     *
+     *
+     *
+     *
+     *       @OA\Response(
+     *          response="422",
+     *          description="Unprocessable Entity",
+     *          @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property(property="success", type="boolean", description="status" ),
+     *          @OA\Property(property="data",type="array",  @OA\Items( type="object"  ),description="data" ),
+     *          @OA\Property(property="message", type="string", description="message" ),
+     *          ),
+     *
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request",
+     *          @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property(property="success", type="boolean", description="status" ),
+     *          @OA\Property(property="data",type="array",  @OA\Items( type="object"  ),description="data" ),
+     *          @OA\Property(property="message", type="string", description="message" ),
+     *          ),
+     *       ),
+     *
+     * )
+     */
+
+     public function deactivate(ActivityRequest $request){
+        try{
+            $activity = $this->activityRepository->getActivityBySlug($request);
+            $activity->update(['is_active' => false]);
+            return $this->successResponse("activity deactivated");
+        }catch(Exception $e){
+            return $this->errorResponse($e->getMessage(),Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+     }
+
+       // --- activate activity
+          /**
+     
+     * @OA\Patch(
+     *     path="/admin/v1/activate-activity/{activity_slug}",
+     *     operationId="activateActivity",
+     *     summary="activate activity",
+     *     tags={"Activity"},
+     *     security={{ "APIKey": {} }},
+     *     @OA\Parameter(
+     *         name="activity_slug",
+     *         in="path",
+     *         description="activity slug",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *           @OA\Response(
+     *          response="200",
+     *          description="Successful Operation",
+     *          @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property(property="success", type="boolean", description="status" ),
+     *          @OA\Property(property="data", type="object", description="data" ),
+     *          @OA\Property(property="message", type="string", description="message" ),
+     *          ),
+     *        ),
+     *
+     *
+     *
+     *
+     *       @OA\Response(
+     *          response="422",
+     *          description="Unprocessable Entity",
+     *          @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property(property="success", type="boolean", description="status" ),
+     *          @OA\Property(property="data",type="array",  @OA\Items( type="object"  ),description="data" ),
+     *          @OA\Property(property="message", type="string", description="message" ),
+     *          ),
+     *
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request",
+     *          @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property(property="success", type="boolean", description="status" ),
+     *          @OA\Property(property="data",type="array",  @OA\Items( type="object"  ),description="data" ),
+     *          @OA\Property(property="message", type="string", description="message" ),
+     *          ),
+     *       ),
+     *
+     * )
+     */
+
+     public function activate(ActivityRequest $request){
+        try{
+            $activity = $this->activityRepository->getActivityBySlug($request);
+            $activity->update(['is_active' => true]);
+            return $this->successResponse("activity activated");
+        }catch(Exception $e){
+            return $this->errorResponse($e->getMessage(),Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+     }
+
 }

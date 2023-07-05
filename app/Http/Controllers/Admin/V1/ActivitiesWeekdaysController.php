@@ -25,6 +25,7 @@ class ActivitiesWeekdaysController extends Controller
         $this->activityRepository = $activityRepository;
         $this->middleware('auth.apikey');
         $this->middleware('auth:api');
+        $this->middleware('permission:sync-activity-week');
     }
 
     // --- store in activity - weekday

@@ -7,7 +7,9 @@
     {"name":"destroy-activity","roles":[3]},
     {"name":"update-activity-price","roles":[3,1]},
 
+    {"name":"sync-activity-week","roles":[3]},
+   
     {"name":"create-role","roles":[3]},
-    {"name":"give-permission","role":[3]}
+    {"name":"give-permission","roles":[3]}
     
 ]

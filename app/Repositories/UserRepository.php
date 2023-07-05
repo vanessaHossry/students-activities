@@ -69,7 +69,7 @@ class UserRepository implements UserInterface
         });
         }
 
-        return $users->paginate($request->per_page);
+        return $users->active()->paginate($request->per_page);
 }
 
     public function show($request)

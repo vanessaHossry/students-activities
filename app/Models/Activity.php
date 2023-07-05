@@ -20,6 +20,7 @@ class Activity extends Model
         'slug',
         'name',
         'price',
+        'is_active'
     ];
 
     protected $hidden=[
@@ -40,5 +41,8 @@ class Activity extends Model
         ->generateSlugsFrom('name')
         ->SaveSlugsTo('slug')
         ->preventOverwrite();
+    }
+    public function scopeActive($query){
+        return $query->where('is_active',true);
     }
 }

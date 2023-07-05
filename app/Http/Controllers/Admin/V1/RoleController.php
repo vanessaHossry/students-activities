@@ -23,6 +23,7 @@ class RoleController extends Controller
         $this->middleware('auth:api');
         $this->roleRepository=$roleRepository;
         $this->userRepository=$userRepository;
+        $this->middleware('permission:give-permission');
     }
      // --- index
     /**

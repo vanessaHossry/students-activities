@@ -80,4 +80,6 @@ class User extends Authenticatable implements JWTSubject
     public function portal(){
         return $this->belongsTo(Portal::class);
     }
+
+    
 }

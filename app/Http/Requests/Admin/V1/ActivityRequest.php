@@ -30,8 +30,10 @@ class ActivityRequest extends FormRequest
             ActivityController::class    .  "@store"           => $this->store(),
             ActivityController::class    .  "@show"            => $this->show(),
             ActivityController::class    .  "@update"          => $this->update(),
-            ActivityController::class    .  "@destroy"          => $this->destroy(),
-            
+            ActivityController::class    .  "@destroy"         => $this->destroy(),
+            ActivityController::class    .  "@restore"         => $this->restore(),
+            ActivityController::class    .  "@deactivate"      => $this->deactivate(),
+            ActivityController::class    .  "@activate"        => $this->activate(),
         };
     }
     public function store(){
@@ -59,6 +61,27 @@ class ActivityRequest extends FormRequest
 
     
     public function destroy(){
+        request()->merge(['activity_slug' => $this->route('activity_slug')]);
+        return [
+            "activity_slug" => 'required|string|exists:activities,slug',
+        ];
+    }
+
+    public function restore(){
+        request()->merge(['activity_slug' => $this->route('activity_slug')]);
+        return [
+            "activity_slug" => 'required|string|exists:activities,slug',
+        ];
+    }
+
+    public function deactivate(){
+        request()->merge(['activity_slug' => $this->route('activity_slug')]);
+        return [
+            "activity_slug" => 'required|string|exists:activities,slug',
+        ];
+    }
+
+    public function activate(){
         request()->merge(['activity_slug' => $this->route('activity_slug')]);
         return [
             "activity_slug" => 'required|string|exists:activities,slug',

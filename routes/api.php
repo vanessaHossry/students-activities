@@ -4,13 +4,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Routing\Controllers\Middleware;
 use App\Http\Controllers\admin\v1\RoleController;
-use App\Http\Controllers\admin\v1\ActivityController;
-use App\Http\Controllers\client\v1\ActivitiesWeekdaysController    as V1ClientActivitiesWeekdaysController;
+use App\Http\Controllers\client\v1\ActivityController  as V1ClientActivityController;
+use App\Http\Controllers\admin\v1\ActivityController  as V1AdminActivityController;
 use App\Http\Controllers\Admin\V1\AuthController        as V1AdminAuthController;
 use App\Http\Controllers\Admin\V1\UserController        as V1AdminUserController;
 use App\Http\Controllers\Client\V1\AuthController       as V1ClientAuthController;
 use App\Http\Controllers\Client\V1\UserController       as V1ClientUserController;
 use App\Http\Controllers\Admin\V1\ActivitiesWeekdaysController      as V1AdminActivitiesWeekdaysController;
+use App\Http\Controllers\client\v1\ActivitiesWeekdaysController    as V1ClientActivitiesWeekdaysController;
 
 
 /*
@@ -52,11 +53,14 @@ Route::group(
         Route::put('/delete-activity-week/{activity_slug}',         [V1AdminActivitiesWeekdaysController::class,'destroy']); 
 
         // --- Activity
-        Route::post('/store-activity',                              [ActivityController::class, 'store']);
-        Route::get('/get-activities',                               [ActivityController::class, 'index']);
-        Route::get('/get-activity-by-slug/{activity_slug}',         [ActivityController::class, 'show']);
-        Route::put('/update-activity-price/{activity_slug}',        [ActivityController::class, 'update']);
-        Route::delete('/delete-activity/{activity_slug}',           [ActivityController::class, 'destroy']);
+        Route::post('/store-activity',                              [V1AdminActivityController::class, 'store']);
+        Route::get('/get-activities',                               [V1AdminActivityController::class, 'index']);
+        Route::get('/get-activity-by-slug/{activity_slug}',         [V1AdminActivityController::class, 'show']);
+        Route::put('/update-activity-price/{activity_slug}',        [V1AdminActivityController::class, 'update']);
+        Route::delete('/delete-activity/{activity_slug}',           [V1AdminActivityController::class, 'destroy']);
+        Route::patch('/restore-activity/{activity_slug}',           [V1AdminActivityController::class, 'restore']);
+        Route::patch('/deactivate-activity/{activity_slug}',        [V1AdminActivityController::class, 'deactivate']);
+        Route::patch('/activate-activity/{activity_slug}',          [V1AdminActivityController::class, 'activate']);
 
          // --- role
         Route::get('/get-roles',                                    [RoleController::class, 'index']);
@@ -83,12 +87,12 @@ Route::group(
        Route::post('/resetPassword',                                [V1ClientUserController::Class, 'resetPassword']);
 
        // --- activity
-       Route::get('/get-activities',                                [ActivityController::class, 'index']);
-       Route::get('/get-activity-by-slug/{activity_slug}',          [ActivityController::class, 'show']);
+       Route::get('/get-activities',                                [V1ClientActivityController::class, 'index']);
+       Route::get('/get-activity-by-slug/{activity_slug}',          [V1ClientActivityController::class, 'show']);
 
        // --- activity weekdays
        Route::get('/get-activities-weekdays',                       [V1ClientActivitiesWeekdaysController::class, 'index']);
-
+       Route::get('/filter-activities-weekdays',                    [V1ClientActivitiesWeekdaysController::class, 'show']);
       
        }
 );

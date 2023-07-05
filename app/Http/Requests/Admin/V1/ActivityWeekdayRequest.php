@@ -28,7 +28,6 @@ class ActivityWeekdayRequest extends FormRequest
     public function rules(): array
     {
         $route_action= Route::current()->getActionName();
-        Log::info($route_action);
         return match($route_action)
         {
             ActivitiesWeekdaysController::class    .  "@store"           => $this->store(),
