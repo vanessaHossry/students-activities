@@ -83,6 +83,7 @@ Route::group(
        // --- User                   
        Route::get('/getSelf',                                       [V1ClientUserController::class, 'getSelf']);
        Route::post('/signUp',                                       [V1ClientUserController::class , 'signUp']);
+       Route::post('/update-images',                                [V1ClientUserController::class,  'updateImages']);
        Route::post('/forgotPassword',                               [V1ClientUserController::class, 'forgotPassword']);
        Route::post('/resetPassword',                                [V1ClientUserController::Class, 'resetPassword']);
 

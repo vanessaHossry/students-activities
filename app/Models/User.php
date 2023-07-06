@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Image;
 use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Crypt;
@@ -81,5 +82,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Portal::class);
     }
 
-    
+    public function images(){
+        return $this->hasMany(Image::class);
+    } 
 }

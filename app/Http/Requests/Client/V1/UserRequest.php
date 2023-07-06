@@ -28,6 +28,7 @@ class UserRequest extends FormRequest
         $route_action= Route::current()->getActionName();
         return match($route_action) {
             UserController::class . '@signUp'            => $this->signUp(),
+            UserController::class . '@updateImages'  => $this->updateImages(),
             UserController::class . '@forgotPassword'      => $this->forgotPassword(),
             UserController::class . '@resetPassword'     => $this->resetPassword(),
 
@@ -43,7 +44,14 @@ class UserRequest extends FormRequest
             'password'      => ['required', 'string', Password::min(6)],
             'date_of_birth' => 'required|date|before:2002-01-01',
             'gender'        => 'string|nullable',
+            'image'         => 'nullable|image|file|max:512'
             //'role_slug'     => ['required','string',Rule::in(['user','tutor'])],
+        ];
+    }
+
+    public function updateImages(){
+        return[
+            'image'=> 'nullable|image|file|max:512'
         ];
     }
 

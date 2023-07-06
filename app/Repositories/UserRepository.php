@@ -3,22 +3,30 @@
 namespace App\Repositories;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Image;
 use App\Models\Portal;
+use App\Traits\utilities;
 use App\Interfaces\UserInterface;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class UserRepository implements UserInterface
 {
+    use utilities;
     public function getSelf()
     {
         return Auth::user();
     }
 
     public function store($request)
-    {
+    {   
+        if(Auth::check()){
         $email = Auth::user()->email;
-        $role_name = $this->getRoleByEmail($email);
-      
+        if(isset($email)){
+            $role_name = $this->getRoleByEmail($email);
+        }
+       
+    } else $role_name = "User";
 
         if($role_name == "Super Admin") {
             $role = Role::where("slug", $request->role_slug)->first();
@@ -31,6 +39,7 @@ class UserRepository implements UserInterface
             $portal_id = $role->portal_id;
         }
         
+        $img = $this->generateImageURL($request);
        
         $user = User::create([
             "first_name" => $request->first_name,
@@ -42,7 +51,12 @@ class UserRepository implements UserInterface
             "portal_id" => $portal_id,
 
         ]);
-       
+        $userID = $user->id;
+        
+       Image::create([
+            "source"  => $img,
+            "user_id" => $userID,
+       ]);
 
         $user->assignRole($role_id);
 

@@ -11,8 +11,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Interfaces\UserInterface;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Client\V1\UserRequest;
 
 class UserController extends Controller
@@ -81,14 +83,16 @@ public function getSelf()
      *           required=true,
      *           description="Body request needed to add user object",
      *            @OA\MediaType(
-     *            mediaType="application/json",
+     *            mediaType="multipart/form-data",
      *            @OA\Schema(
+     *            type="object",
      *               @OA\Property(property="first_name", description="first name"),
      *               @OA\Property(property="last_name",description="last name"),
      *               @OA\Property(property="email", description="email"),
      *               @OA\Property(property="password",description="password"),
      *               @OA\Property(property="date_of_birth", description="date of birth", type="date"),
      *               @OA\Property(property="gender",description="gender"),
+     *               @OA\Property(property="image",description="file to upload",format="binary",type="string"),
      *            ),
      *        ),
      *    ),
@@ -126,7 +130,7 @@ public function getSelf()
      *
       */
 public function signUp(UserRequest $request){
-    try {
+    try { 
         $user = $this->userRepository->store($request);
         return $this->successResponse($user);
     }
@@ -134,6 +138,75 @@ public function signUp(UserRequest $request){
         return $this->errorResponse($e->getMessage(),Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }
+
+// --- update profile picture
+
+     /**
+     
+     * @OA\Post(
+     * path="/client/v1/update-images",
+     * operationId="updateImages",
+     * tags={"User"},
+     * security={{ "APIKey": {} }},
+     *     @OA\RequestBody(
+     *           required=true,
+     *            @OA\MediaType(
+     *            mediaType="multipart/form-data",
+     *            @OA\Schema(
+     *            type="object",
+     *               @OA\Property(property="image",description="file to upload",format="binary",type="string"),
+     *            ),
+     *        ),
+     *    ),
+     *      @OA\Response(
+     *          response="200",
+     *          description="Successful Operation",
+     *          @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property(property="success", type="boolean", description="status" ),
+     *          @OA\Property(property="data", type="object", description="data" ),
+     *          @OA\Property(property="message", type="string", description="message" ),
+     *          ),
+     *        ),
+     *       @OA\Response(
+     *          response="422",
+     *          description="Unprocessable Entity",
+     *          @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property(property="success", type="boolean", description="status" ),
+     *          @OA\Property(property="data",type="array",  @OA\Items( type="object"  ),description="data" ),
+     *          @OA\Property(property="message", type="string", description="message" ),
+     *          ),
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request",
+     *          @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property(property="success", type="boolean", description="status" ),
+     *          @OA\Property(property="data",type="array",  @OA\Items( type="object"  ),description="data" ),
+     *          @OA\Property(property="message", type="string", description="message" ),
+     *          ),
+     *       ),
+     * )
+     *
+      */
+
+     public function updateImages(UserRequest $request){
+       try {
+            $user = $this->userRepository->getSelf();
+            
+            if ($request->image != null) {
+                $img = $this->generateImageURL($request);
+                $res = $user->images()->update(['source' => $img]);
+                if($res) return $this->successResponse("image synced");
+                else return $this->successResponse("something went wrong");
+            }
+            return $this->successResponse("nothing changed");
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 
     // == Forgot Password
     /**
@@ -187,6 +260,7 @@ public function signUp(UserRequest $request){
      *
       */
  
+      
 public function forgotPassword(UserRequest $request){
         try {
             //  $user = $this->userRepository->getUserByEmail($request->email);       //NOT USEFUL HERE
