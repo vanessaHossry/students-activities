@@ -4,12 +4,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Routing\Controllers\Middleware;
 use App\Http\Controllers\admin\v1\RoleController;
-use App\Http\Controllers\client\v1\ActivityController  as V1ClientActivityController;
-use App\Http\Controllers\admin\v1\ActivityController  as V1AdminActivityController;
+use App\Http\Controllers\admin\v1\ProductController;
 use App\Http\Controllers\Admin\V1\AuthController        as V1AdminAuthController;
 use App\Http\Controllers\Admin\V1\UserController        as V1AdminUserController;
 use App\Http\Controllers\Client\V1\AuthController       as V1ClientAuthController;
 use App\Http\Controllers\Client\V1\UserController       as V1ClientUserController;
+use App\Http\Controllers\admin\v1\ActivityController  as V1AdminActivityController;
+use App\Http\Controllers\client\v1\ActivityController  as V1ClientActivityController;
 use App\Http\Controllers\Admin\V1\ActivitiesWeekdaysController      as V1AdminActivitiesWeekdaysController;
 use App\Http\Controllers\client\v1\ActivitiesWeekdaysController    as V1ClientActivitiesWeekdaysController;
 
@@ -61,6 +62,10 @@ Route::group(
         Route::patch('/restore-activity/{activity_slug}',           [V1AdminActivityController::class, 'restore']);
         Route::patch('/deactivate-activity/{activity_slug}',        [V1AdminActivityController::class, 'deactivate']);
         Route::patch('/activate-activity/{activity_slug}',          [V1AdminActivityController::class, 'activate']);
+
+        // --- product
+        Route::post('/store-product',                               [ProductController::class, 'store']);
+        Route::put('/update-product-language/{product_slug}',       [ProductController::class, 'updateTranslation']);
 
          // --- role
         Route::get('/get-roles',                                    [RoleController::class, 'index']);

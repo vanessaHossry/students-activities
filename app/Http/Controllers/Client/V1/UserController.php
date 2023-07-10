@@ -32,8 +32,6 @@ class UserController extends Controller
     }
 
     // == GET
-
- 
     /**
     
 * @OA\Get(

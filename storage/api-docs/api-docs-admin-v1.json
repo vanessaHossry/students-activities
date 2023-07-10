@@ -1361,6 +1361,263 @@
                 ]
             }
         },
+        "/admin/v1/store-product": {
+            "post": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "new version",
+                "operationId": "ed265f16f0b11d3dfa7ee98cbc95807a",
+                "requestBody": {
+                    "description": "Body request needed to update activity weekdays",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "description": "title"
+                                    },
+                                    "language": {
+                                        "description": "lang"
+                                    },
+                                    "product_subtitle": {
+                                        "description": "subtitle",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "description",
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "description": "price",
+                                        "type": "number",
+                                        "format": "double"
+                                    },
+                                    "image": {
+                                        "description": "file to upload",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "APIKey": []
+                    }
+                ]
+            }
+        },
+        "/admin/v1/update-product-language/{product_slug}": {
+            "put": {
+                "tags": [
+                    "Product"
+                ],
+                "operationId": "1cd721145ceebde967c408cd265ffc45",
+                "parameters": [
+                    {
+                        "name": "product_slug",
+                        "in": "path",
+                        "description": "the product to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Body request needed to update activity weekdays",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "language": {
+                                        "type": "string"
+                                    },
+                                    "product_subtitle": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "description": "status",
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "description": "data",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "APIKey": []
+                    }
+                ]
+            }
+        },
         "/admin/v1/get-roles": {
             "get": {
                 "tags": [
