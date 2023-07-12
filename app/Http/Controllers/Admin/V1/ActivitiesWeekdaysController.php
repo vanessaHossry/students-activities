@@ -23,6 +23,7 @@ class ActivitiesWeekdaysController extends Controller
     public function __construct(ActivityInterface $activityRepository)
     {
         $this->activityRepository = $activityRepository;
+        
         $this->middleware('auth.apikey');
         $this->middleware('auth:api');
         $this->middleware('permission:sync-activity-week');

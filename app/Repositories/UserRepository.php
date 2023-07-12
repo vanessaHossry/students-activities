@@ -19,28 +19,28 @@ class UserRepository implements UserInterface
     }
 
     public function store($request)
-    {   
-        if(Auth::check()){
-        $email = Auth::user()->email;
-        if(isset($email)){
-            $role_name = $this->getRoleByEmail($email);
-        }
-       
-    } else $role_name = "User";
+    {
+        if (Auth::check()) {
+            // $email = Auth::user()->email;
+            // if(isset($email)){
+            //     $role_name = $this->getRoleByEmail($email);
+            //}
+            $role_name = "Super Admin";
+        } else
+            $role_name = "User";
 
-        if($role_name == "Super Admin") {
+        if ($role_name == "Super Admin") {
             $role = Role::where("slug", $request->role_slug)->first();
-            $role_id= $role->id;
-            $portal_id= $role->portal_id;
-         }
-        else{ 
+            $role_id = $role->id;
+            $portal_id = $role->portal_id;
+        } else {
             $role = Role::where("slug", "user")->first();
             $role_id = $role->id;
             $portal_id = $role->portal_id;
         }
-        
+
         $img = $this->generateImageURL($request);
-       
+
         $user = User::create([
             "first_name" => $request->first_name,
             "last_name" => $request->last_name,
@@ -52,11 +52,11 @@ class UserRepository implements UserInterface
 
         ]);
         $userID = $user->id;
-        
-       Image::create([
-            "source"  => $img,
+
+        Image::create([
+            "source" => $img,
             "user_id" => $userID,
-       ]);
+        ]);
 
         $user->assignRole($role_id);
 

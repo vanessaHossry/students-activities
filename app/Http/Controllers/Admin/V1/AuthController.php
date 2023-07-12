@@ -25,9 +25,10 @@ class AuthController extends Controller
 private $userRepository;
     public function __construct(UserInterface $userRepository)
     {
+        $this->userRepository = $userRepository;
+        
         //-- middleware for authentication
         $this->middleware('auth:api', ['except' => ['login']]);
-        $this->userRepository = $userRepository;
     }
 
 //

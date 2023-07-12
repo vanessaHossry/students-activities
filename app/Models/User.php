@@ -38,6 +38,7 @@ class User extends Authenticatable implements JWTSubject
         'gender',
         'age',
         'portal_id',
+        'is_blocked',
     ];
 
     /**

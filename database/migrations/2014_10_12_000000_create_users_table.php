@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('date_of_birth');
             $table->string('gender')->nullable();
             $table->uuid('portal_id');
+            $table->boolean('is_blocked')->default(false);
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();

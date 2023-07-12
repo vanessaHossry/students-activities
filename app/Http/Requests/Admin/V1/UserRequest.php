@@ -32,6 +32,7 @@ class UserRequest extends FormRequest
             UserController::class .  '@show'              => $this ->show(),
             UserController::class .  '@destroy'           => $this ->destroy(),
             UserController::Class .  '@index'             => $this ->index(),
+            UserController::Class .  '@blockUser'         => $this ->blockUser(),
         };
     }
 
@@ -73,6 +74,13 @@ class UserRequest extends FormRequest
             'gender'        => ['nullable','string',Rule::in(['female','male'])],
             'per_page'      => 'required|max:100',
             'role'          => ['nullable','string',Rule::in(['super-admin','user','tutor'])],
+        ];
+    }
+
+    public function blockUser(){
+        request()->merge(['email' => $this->route('email')]);
+        return [
+            'email'         => 'required|string|email|exists:users',
         ];
     }
 }

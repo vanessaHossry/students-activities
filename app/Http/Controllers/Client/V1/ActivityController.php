@@ -16,10 +16,12 @@ class ActivityController extends Controller
     private $activityRepository;
     public function __construct(ActivityInterface $activityRepository)
     {
+        $this->activityRepository = $activityRepository;
+
         $this->middleware('auth.apikey');
         $this->middleware('auth:api',["except"]);
-        $this->activityRepository = $activityRepository;
-       //$this->middleware('permission:user.read', ['only' => ['getSelf']]);
+        $this->middleware('blocked_user');
+        //$this->middleware('permission:user.read', ['only' => ['getSelf']]);
        
     }
 

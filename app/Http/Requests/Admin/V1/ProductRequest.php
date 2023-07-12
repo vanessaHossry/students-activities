@@ -36,7 +36,7 @@ class ProductRequest extends FormRequest
     public function store()
     {
         return [
-            "title" => 'required|string',
+            "title" => 'required|string|unique:products,title',
             "language" => ['required', 'string', Rule::in(['en', 'es', 'fr'])],
             "product_subtitle" => 'required|string',
             "description" => 'required|string',
@@ -49,7 +49,7 @@ class ProductRequest extends FormRequest
 
     public function updateTranslation()
     {
-        request()->merge(['product_slug' => $this->route('product_slug')]);
+        request()->merge(['product_slug' => $this->route('product_slug'), 'language'=>$this->header('x-language')]);
         return [
             "product_slug" => 'required|exists:products,slug',
             "language" => ['required', 'string', Rule::in(['en', 'es', 'fr'])],

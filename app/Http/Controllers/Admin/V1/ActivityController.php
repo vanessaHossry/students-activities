@@ -16,10 +16,10 @@ class ActivityController extends Controller
     private $activityRepository;
     public function __construct(ActivityInterface $activityRepository)
     {
+        $this->activityRepository = $activityRepository;
+
         $this->middleware('auth.apikey');
         $this->middleware('auth:api',["except"]);
-        $this->activityRepository = $activityRepository;
-        
         $this->middleware('permission:create-activity', ['only' => ['store']]);
         $this->middleware('permission:destroy-activity', ['only' => ['destroy','restore']]);
         $this->middleware('permission:update-activity-price', ['only' => ['update']]);

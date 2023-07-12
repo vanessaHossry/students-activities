@@ -27,7 +27,7 @@ class ProductTranslation extends Model
         'deleted_at',
     ];
 
-    public function Product(){
+    public function product(){
         return $this->belongsTo(Product::class, 'slug', 'product_slug');
     }
 }

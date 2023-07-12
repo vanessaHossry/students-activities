@@ -19,8 +19,11 @@ class AuthController extends Controller
     use ApiResponse, Docs;
     private $userRepository;
     public function __Construct(UserInterface $userRepository){
+             $this->userRepository = $userRepository;
+             
             $this->middleware('auth:api',['except'=>['login']]);
-            $this->userRepository = $userRepository;
+            $this->middleware('blocked_user', ['except'=>['login']]);
+           
     }
     
 

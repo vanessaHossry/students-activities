@@ -41,6 +41,9 @@ class Handler extends ExceptionHandler
         if($exception instanceof \Spatie\Permission\Exceptions\UnauthorizedException){
             return $this->errorResponse("user does not have the right permissions", Response::HTTP_FORBIDDEN);
         }
+        if($exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException){
+            return $this->errorResponse("unauthorized", Response::HTTP_UNAUTHORIZED);
+        }
 
         return parent::render($request, $exception);
     }

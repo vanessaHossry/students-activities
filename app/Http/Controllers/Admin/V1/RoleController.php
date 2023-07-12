@@ -19,10 +19,11 @@ class RoleController extends Controller
     private $userRepository;
     public function __construct(RoleInterface $roleRepository,UserInterface $userRepository)
     {
-        $this->middleware('auth.apikey');
-        $this->middleware('auth:api');
         $this->roleRepository=$roleRepository;
         $this->userRepository=$userRepository;
+        
+        $this->middleware('auth.apikey');
+        $this->middleware('auth:api');
         $this->middleware('permission:give-permission');
     }
      // --- index

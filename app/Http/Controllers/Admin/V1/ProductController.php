@@ -13,8 +13,11 @@ use App\Models\ProductTranslation;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Interfaces\ProductInterface;
+use App\Http\Resources\ProductResource;
+use App\Http\Resources\ProductCollection;
 use App\Http\Requests\admin\v1\ProductRequest;
-use App\Http\Resources\ProductTranslationsResource;
+
+
 
 class ProductController extends Controller
 {
@@ -24,12 +27,54 @@ class ProductController extends Controller
    // private $activityRepository;
     public function __construct(UserInterface $userRepository, ProductInterface $productRepository)
     {
-        //$this->activityRepository = $activityRepository;
-        $this->middleware('auth.apikey');
-        $this->middleware('auth:api');
         $this->userRepository = $userRepository;
         $this->productRepository = $productRepository;
+        //$this->activityRepository = $activityRepository;
+        
+        $this->middleware('auth.apikey');
+        $this->middleware('auth:api');
+      
     }
+
+    // --- index
+    /**
+     
+     * @OA\Get(
+     *      path="/admin/v1/get-products",
+     *      operationId="getAllProducts",
+     *      tags={"Product"},
+     *      security={{ "APIKey": {} }},
+     *
+     *      @OA\Response(
+     *          response="200",
+     *          description="Successful Operation",
+     *          @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property(property="success", type="boolean", description="status" ),
+     *          @OA\Property(property="data", type="object", description="data" ),
+     *          @OA\Property(property="message", type="string", description="message" ),
+     *          ),
+     *       ),
+     *
+     *
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *
+     *     )
+     */
+    public function index(){
+      try{
+          $products = Product::get();
+          return $this->successResponse(new ProductCollection($products));
+      }
+      catch(Exception $e){
+          return $this->errorResponse($e->getMessage(),Response::HTTP_INTERNAL_SERVER_ERROR);
+      }
+  }
+
+
       /**
      
      * @OA\Post(
@@ -221,104 +266,113 @@ class ProductController extends Controller
      * )
      *
       */
-     
-      public function store(ProductRequest $request)
-      {
-      try{
-        $img = $this->generateImageURL($request);
-        $user = $this->userRepository->getSelf();
-  
-    
-        $product = Product::create([
-          "title" => $request->title,
-          "price" => $request->price,
-          "featuring_img" => $img,
-          "user_id" => $user->id
-        ]);
-    
-        Log::info($this->productRepository->createTranslation($request,$product));
-        
-       
-        return $this->successResponse($product);
-      }catch(Exception $e){
-        return $this->errorResponse($e->getMessage(),Response::HTTP_INTERNAL_SERVER_ERROR);
-      }
-    }
 
-      /**
+  public function store(ProductRequest $request)
+  {
+    try {
+      $img = $this->generateImageURL($request);
+      $user = $this->userRepository->getSelf();
+
+
+      $product = Product::create([
+        "title" => $request->title,
+        "price" => $request->price,
+        "featuring_img" => $img,
+        "user_id" => $user->id
+      ]);
+
+      $this->productRepository->createTranslation($request, $product);
+      $p = Product::where('id',$product->id)->first();
      
-     * @OA\Put(
-     *     path="/admin/v1/update-product-language/{product_slug}",
-     *     tags={"Product"},
-     *     security={{ "APIKey": {} }},
-     *      @OA\Parameter(
-     *         name="product_slug",
-     *         in="path",
-     *         description="the product to update",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="string"
-     *         )
-     *     ),
-     *    @OA\RequestBody(
-     *           required=true,
-     *           description="Body request needed to update activity weekdays",
-     *            @OA\MediaType(
-     *            mediaType="application/json",
-     *            @OA\Schema(
-     *               type="object",
-     *          
-     *                  @OA\Property(property="language",type="string"),
-     *                  @OA\Property(property="product_subtitle",type="string"),
-     *                  @OA\Property(property="description",type="string"),
-     *                     ),
-     *                 ),
-     *            ),
-     *      @OA\Response(
-     *          response="200",
-     *          description="Successful Operation",
-     *          @OA\JsonContent(
-     *          type="object",
-     *          @OA\Property(property="success", type="boolean", description="status" ),
-     *          @OA\Property(property="data", type="object", description="data" ),
-     *          @OA\Property(property="message", type="string", description="message" ),
-     *          ),
-     *        ),
-     *       @OA\Response(
-     *          response="422",
-     *          description="Unprocessable Entity",
-     *          @OA\JsonContent(
-     *          type="object",
-     *          @OA\Property(property="success", type="boolean", description="status" ),
-     *          @OA\Property(property="data",type="array",  @OA\Items( type="object"  ),description="data" ),
-     *          @OA\Property(property="message", type="string", description="message" ),
-     *          ),
-     *       ),
-     *      @OA\Response(
-     *          response=400,
-     *          description="Bad Request",
-     *          @OA\JsonContent(
-     *          type="object",
-     *          @OA\Property(property="success", type="boolean",      description="status" ),
-     *          @OA\Property(property="data",type="array",  @OA\Items( type="object"  ),description="data" ),
-     *          @OA\Property(property="message", type="string", description="message" ),
-     *          ),
-     *       ),
-     * )
-     */
-      public function updateTranslation(ProductRequest $request){
-        try{
-            $product  = $this->productRepository->getProduct($request->product_slug); 
-            if(isset($product)){
-                  $this->productRepository->createTranslation($request,$product);
-            }
-            else return $this->successResponse("product inactive");
-             
-            $a =  Product::with('translations')->where("id",$product->id)->get();//Log::info("a: ".json_encode($a));
-            return $this->successResponse(ProductTranslationsResource::collection($a));
-        }
-        catch(Exception $e){
-          return $this->errorResponse($e->getMessage(),Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-      }
+      return $this->successResponse(new ProductResource($p));
+    } catch (Exception $e) {
+      return $this->errorResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  /**
+ 
+ * @OA\Put(
+ *     path="/admin/v1/update-product-language/{product_slug}",
+ *     tags={"Product"},
+ *     security={{ "APIKey": {} }},
+ *      @OA\Parameter(
+ *         name="product_slug",
+ *         in="path",
+ *         description="the product to update",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="string"
+ *         )
+ *     ),
+ *       @OA\Parameter(
+ *         name="x-language",
+ *         in="header",
+ *         description="the product to update",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="string"
+ *         )
+ *     ),
+ *    @OA\RequestBody(
+ *           required=true,
+ *           description="Body request needed to update activity weekdays",
+ *            @OA\MediaType(
+ *            mediaType="application/json",
+ *            @OA\Schema(
+ *               type="object",
+ *          
+ *                  @OA\Property(property="product_subtitle",type="string"),
+ *                  @OA\Property(property="description",type="string"),
+ *                     ),
+ *                 ),
+ *            ),
+ *      @OA\Response(
+ *          response="200",
+ *          description="Successful Operation",
+ *          @OA\JsonContent(
+ *          type="object",
+ *          @OA\Property(property="success", type="boolean", description="status" ),
+ *          @OA\Property(property="data", type="object", description="data" ),
+ *          @OA\Property(property="message", type="string", description="message" ),
+ *          ),
+ *        ),
+ *       @OA\Response(
+ *          response="422",
+ *          description="Unprocessable Entity",
+ *          @OA\JsonContent(
+ *          type="object",
+ *          @OA\Property(property="success", type="boolean", description="status" ),
+ *          @OA\Property(property="data",type="array",  @OA\Items( type="object"  ),description="data" ),
+ *          @OA\Property(property="message", type="string", description="message" ),
+ *          ),
+ *       ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="Bad Request",
+ *          @OA\JsonContent(
+ *          type="object",
+ *          @OA\Property(property="success", type="boolean",      description="status" ),
+ *          @OA\Property(property="data",type="array",  @OA\Items( type="object"  ),description="data" ),
+ *          @OA\Property(property="message", type="string", description="message" ),
+ *          ),
+ *       ),
+ * )
+ */
+  public function updateTranslation(ProductRequest $request)
+  {
+    try { 
+
+      $product = $this->productRepository->getProduct($request->product_slug);
+      if (isset($product)) {
+        $this->productRepository->createTranslation($request, $product);
+      } else
+        return $this->successResponse("product inactive");
+
+      $a = Product::where("id", $product->id)->first(); 
+      return $this->successResponse(new ProductResource($a));
+    } catch (Exception $e) {
+      return $this->errorResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+  }
 }

@@ -23,10 +23,11 @@ class UserController extends Controller
     private $userRepository;
     public function __construct(UserInterface $userRepository)
     {
+        $this->userRepository = $userRepository;
+        
         $this->middleware('auth.apikey');
         $this->middleware('auth:api',["except" => ["signUp", 'requestReset', 'resetPassword']]);
-        $this->userRepository = $userRepository;
-
+        $this->middleware('blocked_user', ['except'=>['signUp']]);
       
        
     }

@@ -45,6 +45,7 @@ Route::group(
         Route::get('/index',                                        [V1AdminUserController::class, 'index']);
         Route::get('/show/{email}',                                 [V1AdminUserController::class, 'show']);
         Route::delete('/destroy/{email}',                           [V1AdminUserController::class, 'destroy']);
+        Route::patch('/block-user/{email}',                         [V1AdminUserController::class, 'blockUser']);
         Route::get('/getDeleted',                                   [V1AdminUserController::class, 'getDeleted']);
         Route::get('/portal-count-users',                           [V1AdminUserController::class, 'getPortalsUserCount']);
 
@@ -64,6 +65,7 @@ Route::group(
         Route::patch('/activate-activity/{activity_slug}',          [V1AdminActivityController::class, 'activate']);
 
         // --- product
+        Route::get('/get-products',                                 [ProductController::class, 'index']);
         Route::post('/store-product',                               [ProductController::class, 'store']);
         Route::put('/update-product-language/{product_slug}',       [ProductController::class, 'updateTranslation']);
 

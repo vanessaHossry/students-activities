@@ -31,8 +31,8 @@ trait utilities
 
        // this is not working be talli3 a not accessible url. Even when i put the same path
         $file = $request->file('image');
-        $path = Storage::disk('public')->putFile('images', $file);  Log::info($path);
-       $imageUrl = Storage::disk('public')->url($path); Log::info($imageUrl);
+        $path = Storage::disk('public')->putFile('images', $file);  
+        $imageUrl = Storage::disk('public')->url($path);
         return $imageUrl;
         }
         return "";
