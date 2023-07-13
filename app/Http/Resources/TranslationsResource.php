@@ -16,12 +16,10 @@ class TranslationsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        
             return [
                 'locale' => $this->locale,
                 'subtitle' => $this->subtitle,
                 'description' => $this->description,
             ];
-     
     }
 }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('featuring_img');
             $table->double('price');
+            $table->double('discount')->nullable();
             $table->uuid('user_id');
             $table->boolean('is_active')->default(true);
             $table->softDeletes();
